@@ -1,2 +1,13 @@
-node_modules
+# Mac system files
 .DS_Store
+__MACOSX/
+
+# Distribution files (You don't want to push your compiled zips to the source code repo)
+dist/
+*.zip
+
+# Node modules (if you ever use them)
+node_modules/
+
+# Environment variables
+.env
