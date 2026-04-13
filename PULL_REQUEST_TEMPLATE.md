@@ -13,13 +13,19 @@
 <!-- Bullet list of the specific files or behaviours changed. -->
 
 ## How to Test
-<!-- Step-by-step instructions for a reviewer to manually verify the change.
+<!-- Step-by-step instructions for a reviewer to manually verify the change. -->
 
      ### Tested in:
      <!-- Include which browser(s) you tested in. -->
 
 ## Screenshots / Recording
 <!-- If the change is visual, attach a before/after screenshot or a screen recording. -->
+
+## How to review
+<!-- Step by step commit timeline for the reviewer to see changes applied overtime -->
+
+     ### Note for reviewer
+     <!-- One or two sentences explaining steps to review -->
 
 ## Related Issues
 <!-- e.g. Closes #12 -->
