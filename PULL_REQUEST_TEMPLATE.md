@@ -4,17 +4,19 @@
 
 ## Type of change
 <!-- Include all the types that apply -->
-- [] Bug fix
-- [] New feature
-- [] UI/UX change
-- [] Performance improvement
+- [ ] Bug fix
+- [ ] New feature
+- [ ] UI/UX change
+- [ ] Performance improvement
 
 ## Changes
 <!-- Bullet list of the specific files or behaviours changed. -->
 
 ## How to Test
 <!-- Step-by-step instructions for a reviewer to manually verify the change.
-     Include which browser(s) you tested in. -->
+
+     ### Tested in:
+     <!-- Include which browser(s) you tested in. -->
 
 ## Screenshots / Recording
 <!-- If the change is visual, attach a before/after screenshot or a screen recording. -->
