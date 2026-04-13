@@ -121,32 +121,7 @@ feat(content): add keyboard shortcut to toggle mini player
 
 ### PR Description Template
 
-When you open a pull request, fill in the following sections:
-
-```markdown
-## Summary
-<!-- One to three sentences explaining what this PR does and why. -->
-
-## Changes
-<!-- Bullet list of the specific files or behaviours changed. -->
-
-## How to Test
-<!-- Step-by-step instructions for a reviewer to manually verify the change.
-     Include which browser(s) you tested in. -->
-
-## Screenshots / Recording
-<!-- If the change is visual, attach a before/after screenshot or a screen recording. -->
-
-## Related Issues
-<!-- e.g. Closes #12 -->
-
-## Checklist
-- [ ] Build succeeds (`bash build.sh`)
-- [ ] Tested in Chrome
-- [ ] Tested in Firefox
-- [ ] No console.log statements left in production code
-- [ ] Both manifests updated (if a new permission was added)
-```
+When you open a pull request, fill in the sections as described in [PULL_REQUEST_TEMPLATE.md](PULL_REQUEST_TEMPLATE.md).
 
 ### Branch Naming
 
