@@ -2,6 +2,13 @@
 ## Summary
 <!-- One to three sentences explaining what this PR does and why. -->
 
+## Type of change
+<!-- Include all the types that apply -->
+- [] Bug fix
+- [] New feature
+- [] UI/UX change
+- [] Performance improvement
+
 ## Changes
 <!-- Bullet list of the specific files or behaviours changed. -->
 
