@@ -1,0 +1,64 @@
+name: Question or support
+description: Ask for help, clarifications, or usage guidance.
+title: "[Support]: "
+labels:
+  - question
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for usage help or troubleshooting questions.
+        If you found a reproducible bug, please use the Bug report template instead.
+
+  - type: dropdown
+    id: question_type
+    attributes:
+      label: Question type
+      options:
+        - Setup or installation help
+        - Usage clarification
+        - Troubleshooting
+        - Browser-specific behavior
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What do you need help with?
+      placeholder: "Please describe your question clearly."
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you already tried
+      description: Tell us what steps you already took.
+      placeholder: "I tried..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment details
+      value: |
+        - OS:
+        - Browser:
+        - Browser version:
+        - Extension version:
+      render: markdown
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add screenshots, logs, or links that may help.
+    validations:
+      required: false
