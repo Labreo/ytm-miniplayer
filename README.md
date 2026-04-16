@@ -7,6 +7,11 @@ A lightweight, distraction-free mini-player extension for YouTube Music, availab
 ![Version](https://img.shields.io/badge/version-1.2-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
+## 📥 Installation
+
+- **Firefox:** [Install from Mozilla Add-ons](https://addons.mozilla.org/en-US/firefox/addon/ytm-mini-mode/)
+- **Chrome:** Chrome Web Store (Coming soon)
+
 ## 📖 Project Purpose
 
 YouTube Music is great, but managing playback while coding or studying often means hunting through dozens of open tabs. **YTM Mini Mode** solves this by adding a native toggle button directly to the YouTube Music interface. 
