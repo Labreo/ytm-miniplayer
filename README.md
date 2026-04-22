@@ -4,7 +4,7 @@
 
 A lightweight, distraction-free mini-player extension for YouTube Music, available for Firefox and Chrome. 
 
-![Version](https://img.shields.io/badge/version-1.2-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 ## 📥 Installation
