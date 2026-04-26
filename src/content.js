@@ -236,8 +236,32 @@ function createNavButtons() {
     mainBtn.onmouseover = () => mainBtn.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
     mainBtn.onmouseout = () => mainBtn.style.backgroundColor = "transparent";
 
-    mainBtn.addEventListener('click', () => {
-        browser.runtime.sendMessage({ action: "toggle_mini" });
+    mainBtn.addEventListener('click', (e) => {
+        // Prevent event from bubbling up to YTM's own listeners
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Visual feedback
+        mainBtn.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+        mainBtn.style.transform = "scale(0.9)";
+        
+        setTimeout(() => {
+            mainBtn.style.transform = "scale(1)";
+            mainBtn.style.backgroundColor = "transparent";
+        }, 150);
+
+        console.log("YTM Mini: Toggle button clicked");
+
+        // Use fallback-safe messenger
+        const messenger = (typeof browser !== 'undefined') ? browser : chrome;
+        
+        try {
+            messenger.runtime.sendMessage({ action: "toggle_mini" }).catch(err => {
+                console.error("YTM Mini: Failed to send message.", err);
+            });
+        } catch (err) {
+            console.error("YTM Mini: Runtime error during message send.", err);
+        }
     });
 
     // --- SUPPORT BUTTON ---
