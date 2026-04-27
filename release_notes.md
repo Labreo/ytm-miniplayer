@@ -4,6 +4,13 @@ All notable changes to the **YTM Mini Mode** extension will be documented in thi
 
 ---
 
+## [1.3.1] - 2026-04-27
+### Fixed
+- **Permission Optimization**: Removed the unnecessary `tabs` permission from `manifest.json` as per Chrome Web Store recommendations. The extension continues to function perfectly using context-aware tab IDs.
+- **Version Bump**: Aligned all manifest and package files to version 1.3.1.
+
+---
+
 ## [1.3.0] - 2026-04-22
 ### Added
 - **Draggable Like/Dislike Pill Bar**: A new, premium UI element that provides quick access to song ratings in mini-mode.
