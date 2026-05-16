@@ -296,9 +296,45 @@ function createNavButtons() {
     injectMiniCSS();
 }
 
+function setupMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+
+    const titleEl = document.querySelector('.title.ytmusic-player-bar');
+    const artistEl = document.querySelector('.byline.ytmusic-player-bar');
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: titleEl ? titleEl.textContent.trim() : 'YouTube Music',
+        artist: artistEl ? artistEl.textContent.trim() : '',
+    });
+
+    const clickBtn = (selector) => {
+        const btn = document.querySelector(selector);
+        if (btn) btn.click();
+    };
+
+    navigator.mediaSession.setActionHandler('play', () => {
+        clickBtn('ytmusic-player-bar tp-yt-paper-icon-button[aria-label="Play"]');
+    });
+
+    navigator.mediaSession.setActionHandler('pause', () => {
+        clickBtn('ytmusic-player-bar tp-yt-paper-icon-button[aria-label="Pause"]');
+    });
+
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+        clickBtn('ytmusic-player-bar tp-yt-paper-icon-button[aria-label="Next"]');
+    });
+
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+        clickBtn('ytmusic-player-bar tp-yt-paper-icon-button[aria-label="Previous"]');
+    });
+}
+
+window.addEventListener('focus', setupMediaSession);
+setupMediaSession();
+
 // Run checks to keep everything synced
 setInterval(() => {
     createNavButtons();
     watchPlayerState();
     managePillBar();
+    setupMediaSession();
 }, 500);
