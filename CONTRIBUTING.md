@@ -19,18 +19,58 @@ Thank you for your interest in contributing! YTM Mini Mode is a lightweight brow
 ## Getting Started
 
 1. **Fork** the repository and clone your fork locally.
+
 2. Install dependencies:
+
    ```bash
    npm install
    ```
+
 3. Build both browser targets:
+
    ```bash
    bash build.sh
    ```
+
 4. Load the appropriate unpacked extension from `dist/chrome/` or `dist/firefox/` into your browser (see [README.md](README.md) for detailed instructions).
+
 5. Make your changes in the `src/` directory. Run `build.sh` again to verify the build succeeds before opening a PR.
 
+### Windows Notes
+
+If you're using Windows, run build commands using **Git Bash** instead of Command Prompt or PowerShell.
+
+Example:
+
+```bash
+bash build.sh
+```
+
+The build process generates the required `manifest.json` files from:
+
+* `manifest.chrome.json`
+* `manifest.firefox.json`
+
+If `manifest.json` files are missing or the extension fails to load:
+
+* ensure `bash build.sh` completed successfully
+* reload the unpacked extension from the generated `dist/` folder
+* verify Git Bash is installed and available in your system PATH
+
+### Troubleshooting
+
+#### `bash build.sh` not working
+
+* Ensure Git Bash is installed
+* Run the command inside Git Bash instead of CMD or PowerShell
+
+#### Extension not loading
+
+* Ensure the correct unpacked extension folder from `dist/` is selected
+* Reload the extension after rebuilding
+
 > **Note:** The `dist/` directory and `*.zip` files are intentionally gitignored. Never commit build output.
+
 
 ---
 
