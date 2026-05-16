@@ -1,41 +1,102 @@
-## Pull Request Template
+# Pull Request Template
 
 ## Summary
-<!-- One to three sentences explaining what this PR does and why. -->
 
-## Type of change
-<!-- Include all the types that apply -->
-- [ ] Bug fix
-- [ ] New feature
-- [ ] UI/UX change
-- [ ] Performance improvement
-- [ ] Documentation update
+<!-- Briefly explain what this PR changes and why it is needed. -->
 
-## Changes
-<!-- Bullet list of the specific files or behaviours changed. -->
+---
 
-## How to Test
-<!-- Step-by-step instructions for a reviewer to manually verify the change. -->
+## Type of Change
 
-     ### Tested in:
-     <!-- Include which browser(s) you tested in. -->
+<!-- Select all applicable options -->
 
-## Screenshots / Recording
-<!-- If the change is visual, attach a before/after screenshot or a screen recording. -->
+* [ ] Bug fix
+* [ ] New feature
+* [ ] Enhancement
+* [ ] UI/UX improvement
+* [ ] Performance improvement
+* [ ] Refactor
+* [ ] Documentation update
+* [ ] Accessibility improvement
 
-## How to review
-<!-- Step by step commit timeline for the reviewer to see changes applied overtime -->
-
-     ### Note for reviewer
-     <!-- One or two sentences explaining steps to review -->
+---
 
 ## Related Issues
-<!-- e.g. Closes #12 -->
+
+<!-- Example: Closes #17 -->
+
+Closes #
+
+---
+
+## Changes Made
+
+<!-- List the major changes introduced in this PR -->
+
+* Added ...
+* Updated ...
+* Improved ...
+
+---
+
+## How to Test
+
+<!-- Provide clear steps for reviewers to verify the changes -->
+
+1.
+2.
+3.
+
+### Tested In
+
+* [ ] Chrome
+* [ ] Firefox
+* [ ] Edge
+* [ ] Other: ___________
+
+---
+
+## Screenshots / Demo (Optional)
+
+<!-- Add before/after screenshots or recordings for visual changes -->
+
+| Before | After |
+| ------ | ----- |
+|        |       |
+
+---
+
+## Reviewer Notes
+
+<!-- Add any additional context, limitations, or review guidance -->
+
+*
+
+---
 
 ## Checklist
-- [ ] Build succeeds (`bash build.sh`)
-- [ ] Tested in Chrome
-- [ ] Tested in Firefox
-- [ ] No console.log statements left in production code
-- [ ] Both manifests updated (if a new permission was added)
 
+### Code Quality
+
+* [ ] Build succeeds (`bash build.sh`)
+* [ ] No console.log statements left in production code
+* [ ] Existing functionality works as expected
+
+### Testing
+
+* [ ] Changes tested locally
+* [ ] Cross-browser testing completed
+
+### Documentation
+
+* [ ] Documentation updated if needed
+* [ ] Comments added where necessary
+
+### Accessibility
+
+* [ ] No accessibility issues introduced
+* [ ] UI remains responsive
+
+### Permissions / Config
+
+* [ ] Both manifests updated (if new permissions were added)
