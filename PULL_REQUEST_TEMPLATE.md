@@ -1,41 +1,60 @@
-## Pull Request Template
+# Pull Request
 
 ## Summary
-<!-- One to three sentences explaining what this PR does and why. -->
+<!-- Brief explanation of changes -->
 
-## Type of change
-<!-- Include all the types that apply -->
+## Related Issue
+Fixes #17
+
+## Type of Change
 - [ ] Bug fix
 - [ ] New feature
-- [ ] UI/UX change
-- [ ] Performance improvement
 - [ ] Documentation update
+- [ ] UI/UX improvement
+- [ ] Refactor
+- [ ] Performance improvement
 
-## Changes
-<!-- Bullet list of the specific files or behaviours changed. -->
+---
 
-## How to Test
-<!-- Step-by-step instructions for a reviewer to manually verify the change. -->
+## Changes Made
+- 
+- 
+- 
 
-     ### Tested in:
-     <!-- Include which browser(s) you tested in. -->
+---
 
-## Screenshots / Recording
-<!-- If the change is visual, attach a before/after screenshot or a screen recording. -->
+## Screenshots / Demo (Optional)
 
-## How to review
-<!-- Step by step commit timeline for the reviewer to see changes applied overtime -->
+| Before | After |
+|--------|-------|
+|        |       |
 
-     ### Note for reviewer
-     <!-- One or two sentences explaining steps to review -->
+---
 
-## Related Issues
-<!-- e.g. Closes #12 -->
+## Testing
+- [ ] Tested locally
+- [ ] Existing features unaffected
+- [ ] Responsive design checked
 
-## Checklist
-- [ ] Build succeeds (`bash build.sh`)
-- [ ] Tested in Chrome
-- [ ] Tested in Firefox
-- [ ] No console.log statements left in production code
-- [ ] Both manifests updated (if a new permission was added)
+### Steps to Test
+1.
+2.
+3.
 
+---
+
+## Accessibility Checklist
+- [ ] Proper labels/headings used
+- [ ] Keyboard navigation considered
+- [ ] Contrast/readability checked
+
+---
+
+## Documentation Checklist
+- [ ] README updated (if needed)
+- [ ] Comments/documentation added
+
+---
+
+## Reviewer Notes
+<!-- Anything reviewers should focus on -->
