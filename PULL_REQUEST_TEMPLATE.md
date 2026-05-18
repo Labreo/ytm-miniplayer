@@ -1,102 +1,60 @@
-# Pull Request Template
+# Pull Request
 
 ## Summary
+<!-- Brief explanation of changes -->
 
-<!-- Briefly explain what this PR changes and why it is needed. -->
-
----
+## Related Issue
+Fixes #17
 
 ## Type of Change
-
-<!-- Select all applicable options -->
-
-* [ ] Bug fix
-* [ ] New feature
-* [ ] Enhancement
-* [ ] UI/UX improvement
-* [ ] Performance improvement
-* [ ] Refactor
-* [ ] Documentation update
-* [ ] Accessibility improvement
-
----
-
-## Related Issues
-
-<!-- Example: Closes #17 -->
-
-Closes #
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Documentation update
+- [ ] UI/UX improvement
+- [ ] Refactor
+- [ ] Performance improvement
 
 ---
 
 ## Changes Made
-
-<!-- List the major changes introduced in this PR -->
-
-* Added ...
-* Updated ...
-* Improved ...
-
----
-
-## How to Test
-
-<!-- Provide clear steps for reviewers to verify the changes -->
-
-1.
-2.
-3.
-
-### Tested In
-
-* [ ] Chrome
-* [ ] Firefox
-* [ ] Edge
-* [ ] Other: ___________
+- 
+- 
+- 
 
 ---
 
 ## Screenshots / Demo (Optional)
 
-<!-- Add before/after screenshots or recordings for visual changes -->
-
 | Before | After |
-| ------ | ----- |
+|--------|-------|
 |        |       |
 
 ---
 
-## Reviewer Notes
+## Testing
+- [ ] Tested locally
+- [ ] Existing features unaffected
+- [ ] Responsive design checked
 
-<!-- Add any additional context, limitations, or review guidance -->
-
-*
+### Steps to Test
+1.
+2.
+3.
 
 ---
 
-## Checklist
+## Accessibility Checklist
+- [ ] Proper labels/headings used
+- [ ] Keyboard navigation considered
+- [ ] Contrast/readability checked
 
-### Code Quality
+---
 
-* [ ] Build succeeds (`bash build.sh`)
-* [ ] No console.log statements left in production code
-* [ ] Existing functionality works as expected
+## Documentation Checklist
+- [ ] README updated (if needed)
+- [ ] Comments/documentation added
 
-### Testing
+---
 
-* [ ] Changes tested locally
-* [ ] Cross-browser testing completed
-
-### Documentation
-
-* [ ] Documentation updated if needed
-* [ ] Comments added where necessary
-
-### Accessibility
-
-* [ ] No accessibility issues introduced
-* [ ] UI remains responsive
-
-### Permissions / Config
-
-* [ ] Both manifests updated (if new permissions were added)
+## Reviewer Notes
+<!-- Anything reviewers should focus on -->
