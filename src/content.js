@@ -20,28 +20,34 @@ function injectMiniCSS() {
 
             /* 2. Style the PILL CONTAINER - Movable & Premium */
             #ytm-pill-container {
-                display: flex !important;
-                visibility: visible !important;
-                position: fixed !important;
-                bottom: 85px; 
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(20, 20, 20, 0.75) !important;
-                backdrop-filter: blur(16px) !important;
-                -webkit-backdrop-filter: blur(16px) !important;
-                padding: 4px 10px !important;
-                border-radius: 100px !important;
-                border: 1px solid rgba(255, 255, 255, 0.15) !important;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
-                z-index: 2147483647 !important;
-                pointer-events: auto !important; 
-                transition: background 0.3s, border 0.3s, box-shadow 0.3s;
-                align-items: center !important;
-                justify-content: center !important;
-                cursor: grab !important;
-                user-select: none !important;
-                touch-action: none !important; /* Prevents scrolling while dragging */
-            }
+    display: flex !important;
+    visibility: visible !important;
+    position: fixed !important;
+    bottom: 85px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background: rgba(20, 20, 20, 0.6) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
+
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.6) !important;
+
+    z-index: 2147483647 !important;
+
+    transition: all 0.25s ease;
+    align-items: center !important;
+    justify-content: center !important;
+
+    cursor: grab !important;
+    user-select: none !important;
+
+    animation: ytmFloatIn 0.35s ease;
+}
 
             #ytm-pill-container:active {
                 cursor: grabbing !important;
@@ -52,6 +58,7 @@ function injectMiniCSS() {
                 background: rgba(30, 30, 30, 0.9) !important;
                 border: 1px solid rgba(255, 255, 255, 0.25) !important;
                 box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7) !important;
+                transform: translateX(-50%) scale(1.03);
             }
 
             /* 3. Native renderer overrides */
@@ -78,7 +85,11 @@ function injectMiniCSS() {
 
             body.ytm-mini-mode ytmusic-like-button-renderer tp-yt-paper-icon-button:hover {
                 opacity: 1 !important;
-                transform: scale(1.1) !important;
+                transform: scale(1.2) rotate(-2deg);
+            }
+            #ytm-pill-container:active {
+                transform: translateX(-50%) scale(0.97);
+                transition: transform 0.1s ease;
             }
 
             /* Active state colors */
@@ -90,6 +101,29 @@ function injectMiniCSS() {
                 color: #ff4e4e !important;
                 filter: drop-shadow(0 0 5px rgba(255, 78, 78, 0.5)) !important;
             }
+        }
+        @keyframes ytmFloatIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(15px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0) scale(1);
+            }
+        }
+        #ytm-pill-container::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #ytm-pill-container:hover::before {
+            opacity: 1;
         }
     `;
     document.head.appendChild(style);
@@ -155,6 +189,8 @@ function managePillBar() {
         const container = document.getElementById('ytm-pill-container');
         if (container) container.style.display = 'none';
         return;
+        container.style.backdropFilter = "blur(20px) saturate(180%)";
+        container.style.webkitBackdropFilter = "blur(20px) saturate(180%)";
     }
 
     let container = document.getElementById('ytm-pill-container');
