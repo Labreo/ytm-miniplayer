@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail 
+ 
 # Clean previous builds
 rm -rf dist
 mkdir -p dist/firefox dist/chrome dist/edge
