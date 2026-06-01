@@ -1,8 +1,17 @@
-// background.js
+/**
+ * background.js
+ *
+ * Background runtime for YTM Mini Mode.
+ *
+ * Responsibilities:
+ * - Normalize extension runtime APIs across browsers.
+ * - Receive toggle requests from the content script.
+ * - Move the current YouTube Music tab into or out of a popup window.
+ */
 
 /**
- * 1. Robust Polyfill Initialization
- * Ensures 'browser' namespace is available, falling back to 'chrome' if necessary.
+ * Robust polyfill initialization.
+ * Ensures the `browser` namespace is available, falling back to `chrome` if necessary.
  */
 try {
   if (typeof importScripts === 'function') {
@@ -12,12 +21,13 @@ try {
   console.warn("Background: Polyfill import skipped or failed:", e);
 }
 
-// Fallback for environments where polyfill might not have attached to global scope correctly
+// Fallback for environments where the polyfill may not attach to global scope correctly.
 const messenger = (typeof browser !== 'undefined') ? browser : chrome;
 
 /**
- * 2. Message Listener
- * Handles the 'toggle_mini' action to switch between normal and popup windows.
+ * Listen for runtime messages from the content script.
+ * @param {{action:string}} message
+ * @param {browser.runtime.MessageSender|chrome.runtime.MessageSender} sender
  */
 messenger.runtime.onMessage.addListener(async (message, sender) => {
   if (message.action === "toggle_mini") {

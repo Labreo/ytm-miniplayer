@@ -40,6 +40,63 @@ This project is built using:
 
 ---
 
+## 🧠 Architecture Overview
+
+YTM Mini Mode is a small browser extension with two runtime components:
+
+- `src/content.js`
+  - Injects the mini-player toggle button into the YouTube Music page.
+  - Applies responsive mini-player CSS and manages the floating pill UI.
+  - Observes page state and sends `toggle_mini` runtime messages.
+- `src/background.js`
+  - Runs in the extension background context.
+  - Receives toggle requests and moves the current tab into or out of a popup window.
+- `src/browser-polyfill.min.js`
+  - Normalizes `browser.*` APIs across Chrome/Edge and Firefox.
+
+### Browser extension flow
+
+1. The browser loads the extension from `manifest.chrome.json` or `manifest.firefox.json`.
+2. When the user opens `music.youtube.com`, the content script is injected.
+3. `content.js` creates the mini-player button and manages page styling.
+4. When the button is clicked, `content.js` sends a runtime message.
+5. `background.js` receives the message and toggles the window state.
+
+### Browser compatibility
+
+- `manifest.chrome.json` is used for Chrome/Edge with Manifest V3 and a service worker background.
+- `manifest.firefox.json` is used for Firefox with a background script array.
+- Both manifests share the same host permission for `*://music.youtube.com/*`.
+
+For a deeper architecture reference, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+## 📁 Project Structure
+
+- `src/content.js` — page UI injection, custom styling, mini-player state, and message sending.
+- `src/background.js` — background message handler and window management.
+- `src/browser-polyfill.min.js` — cross-browser runtime API compatibility.
+- `build.sh` — generates `dist/` artifacts for Chrome, Firefox, and Edge.
+- `manifest.chrome.json` — Chrome/Edge MV3 extension manifest.
+- `manifest.firefox.json` — Firefox-compatible extension manifest.
+- `README.md` — user-facing setup and project overview.
+- `CONTRIBUTING.md` — contributor workflow, style rules, and PR guidance.
+
+## 🔄 Extension Workflow
+
+```text
+User Click
+↓
+content.js
+↓
+runtime message
+↓
+background.js
+↓
+window management
+```
+
+---
+
 ## 💻 Local Setup Instructions
 
 These instructions have been designed and tested for a clean local machine environment.

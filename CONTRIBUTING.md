@@ -7,10 +7,13 @@ Thank you for your interest in contributing! YTM Mini Mode is a lightweight brow
 ## Table of Contents
 
 - [Getting Started](#getting-started)
+- [Developer Workflow](#developer-workflow)
+- [Important Files](#important-files)
 - [Code Style](#code-style)
 - [Commit Message Conventions](#commit-message-conventions)
 - [Pull Request Format](#pull-request-format)
 - [Test Expectations](#test-expectations)
+- [Troubleshooting](#troubleshooting)
 - [Review Timeline](#review-timeline)
 - [Reporting Issues](#reporting-issues)
 
@@ -31,6 +34,38 @@ Thank you for your interest in contributing! YTM Mini Mode is a lightweight brow
 5. Make your changes in the `src/` directory. Run `build.sh` again to verify the build succeeds before opening a PR.
 
 > **Note:** The `dist/` directory and `*.zip` files are intentionally gitignored. Never commit build output.
+
+## Developer Workflow
+
+1. Fork the repository and clone your fork locally:
+   ```bash
+git clone https://github.com/Labreo/ytm-miniplayer.git
+cd ytm-miniplayer
+```
+2. Install dependencies:
+   ```bash
+npm install
+```
+3. Build the extension:
+   ```bash
+bash build.sh
+```
+4. Load the extension in your browser:
+   - **Chrome/Edge:** Open `chrome://extensions/`, enable Developer mode, click "Load unpacked", and select `dist/chrome/`.
+   - **Firefox:** Open `about:debugging#/runtime/this-firefox`, click "Load Temporary Add-on", and select `dist/firefox/manifest.json`.
+5. Verify the change on `https://music.youtube.com/`:
+   - Confirm the mini-player toggle appears.
+   - Confirm the popup opens and closes correctly.
+   - Confirm playback continues when toggling.
+
+### Important Files
+
+- `src/content.js` — injects UI controls into YouTube Music, applies custom styling, observes page updates, and sends messages to the background runtime.
+- `src/background.js` — handles toggle requests and manages popup/normal window state.
+- `src/browser-polyfill.min.js` — normalizes the `browser.*` extension API across browsers.
+- `manifest.chrome.json` — Chrome/Edge MV3 manifest.
+- `manifest.firefox.json` — Firefox manifest configuration.
+- `build.sh` — builds the extension by copying source files and creating zip packages.
 
 ---
 
@@ -153,6 +188,15 @@ If your change only affects one browser target, you must still state which brows
 ### Future Testing
 
 If you'd like to help establish a proper test suite, please open a discussion issue first — contributions to testing infrastructure are very welcome.
+
+---
+
+## Troubleshooting
+
+- **Extension not loading:** Ensure the unpacked extension is loaded from `dist/chrome/`, `dist/edge/`, or `dist/firefox/`. Refresh the target page after loading.
+- **Button not appearing:** Confirm you are on `https://music.youtube.com/` and that the extension is enabled. The content script only runs on the matching host.
+- **Runtime messaging issues:** Open the browser console and look for errors related to `toggle_mini`. If the message fails, verify that `background.js` is active and `browser-polyfill.min.js` is included.
+- **Manifest updates:** If you add permissions or hosts, update both `manifest.chrome.json` and `manifest.firefox.json` and document the reason in the PR description.
 
 ---
 
