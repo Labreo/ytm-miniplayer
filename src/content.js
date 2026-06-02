@@ -98,6 +98,10 @@ function injectMiniCSS() {
 // Drag and drop implementation
 let isDragging = false;
 let startX, startY, initialX, initialY;
+const pillRendererState = {
+    parent: null,
+    nextSibling: null,
+};
 
 function initDraggable(el) {
     el.addEventListener('mousedown', dragStart);
@@ -153,6 +157,23 @@ function initDraggable(el) {
 function managePillBar() {
     if (window.innerWidth > 600) {
         const container = document.getElementById('ytm-pill-container');
+        const primaryRenderer = container
+            ? container.querySelector('ytmusic-like-button-renderer')
+            : null;
+
+        if (
+            container &&
+            primaryRenderer &&
+            pillRendererState.parent &&
+            primaryRenderer.parentElement === container
+        ) {
+            const nextSibling = pillRendererState.parent.contains(pillRendererState.nextSibling)
+                ? pillRendererState.nextSibling
+                : null;
+
+            pillRendererState.parent.insertBefore(primaryRenderer, nextSibling);
+        }
+
         if (container) container.style.display = 'none';
         return;
     }
@@ -174,6 +195,12 @@ function managePillBar() {
     if (nativeRenderers.length > 0) {
         const primaryRenderer = nativeRenderers[0];
         if (primaryRenderer.parentElement !== container) {
+            if (!primaryRenderer.dataset.originalStored) {
+                pillRendererState.parent = primaryRenderer.parentNode;
+                pillRendererState.nextSibling = primaryRenderer.nextSibling;
+                primaryRenderer.dataset.originalStored = 'true';
+            }
+
             // Clean container to avoid duplicates shown in user screenshot
             while (container.firstChild) {
                 container.removeChild(container.firstChild);
