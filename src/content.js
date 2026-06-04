@@ -10,54 +10,146 @@ function injectMiniCSS() {
 
     style.innerHTML = `
         @media (max-width: 600px) {
-            /* 1. Hide the default middle controls container to make room */
-            body.ytm-mini-mode ytmusic-player-bar .middle-controls-buttons {
-                display: block !important;
-                position: absolute !important;
-                width: 0 !important;
-                height: 0 !important;
-                visibility: hidden !important;
-                overflow: hidden !important;
+            /* Hide native player bar visually */
+            body.ytm-mini-mode ytmusic-player-bar {
+                opacity: 0 !important;
+                pointer-events: none !important;
             }
 
-            /* 2. Style the PILL CONTAINER - Movable & Premium */
-            #ytm-pill-container {
-                display: flex !important;
-                visibility: visible !important;
+            /* Hide cluttered panels in expanded player page */
+            body.ytm-mini-mode ytmusic-player-page #side-panel,
+            body.ytm-mini-mode ytmusic-player-page .side-panel,
+            body.ytm-mini-mode ytmusic-player-page ytmusic-description-shelf-renderer,
+            body.ytm-mini-mode ytmusic-player-page ytmusic-mealbar-renderer {
+                display: none !important;
+            }
+
+            /* Mini-player bar */
+            #ytm-mini-bar {
                 position: fixed !important;
-                bottom: 85px; 
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(20, 20, 20, 0.75) !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                height: 64px !important;
+                background: rgba(20, 20, 20, 0.92) !important;
                 backdrop-filter: blur(16px) !important;
                 -webkit-backdrop-filter: blur(16px) !important;
-                padding: 4px 10px !important;
-                border-radius: 100px !important;
-                border: 1px solid rgba(255, 255, 255, 0.15) !important;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
-                z-index: 2147483647 !important;
-                pointer-events: auto !important; 
-                transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                display: flex !important;
+                align-items: center !important;
+                padding: 0 12px !important;
+                gap: 12px !important;
+                z-index: 2147483646 !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Progress bar */
+            #ytm-mini-progress {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                height: 2px !important;
+                background: rgba(255, 255, 255, 0.15) !important;
+                pointer-events: none !important;
+            }
+            #ytm-mini-progress-fill {
+                height: 100% !important;
+                background: #ff4444 !important;
+                width: 0% !important;
+                transition: width 0.5s linear !important;
+            }
+
+            /* Thumbnail (album art) */
+            .ytm-mini-thumb {
+                width: 48px !important;
+                height: 48px !important;
+                border-radius: 6px !important;
+                overflow: hidden !important;
+                flex-shrink: 0 !important;
+            }
+            .ytm-mini-thumb img {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                display: block !important;
+            }
+
+            /* Song info */
+            .ytm-mini-info {
+                flex: 1 !important;
+                min-width: 0 !important;
+                overflow: hidden !important;
+            }
+            .ytm-mini-title {
+                color: #fff !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+                line-height: 1.3 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+            .ytm-mini-artist {
+                color: #aaa !important;
+                font-size: 12px !important;
+                line-height: 1.3 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+
+            /* Transport controls */
+            .ytm-mini-controls {
+                display: flex !important;
+                align-items: center !important;
+                gap: 2px !important;
+                flex-shrink: 0 !important;
+            }
+            .ytm-mini-controls button {
+                background: none !important;
+                border: none !important;
+                color: #fff !important;
+                width: 36px !important;
+                height: 36px !important;
+                border-radius: 50% !important;
+                cursor: pointer !important;
+                display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                cursor: grab !important;
-                user-select: none !important;
-                touch-action: none !important; /* Prevents scrolling while dragging */
+                font-size: 16px !important;
+                transition: background 0.2s, transform 0.15s !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                outline: none !important;
+                line-height: 1 !important;
+            }
+            .ytm-mini-controls button:hover {
+                background: rgba(255, 255, 255, 0.1) !important;
+            }
+            .ytm-mini-controls button:active {
+                transform: scale(0.9) !important;
             }
 
-            #ytm-pill-container:active {
-                cursor: grabbing !important;
-                transform: translateX(-50%) scale(0.98);
+            #ytm-mini-play {
+                font-size: 20px !important;
+                width: 40px !important;
+                height: 40px !important;
+                background: rgba(255, 255, 255, 0.08) !important;
+            }
+            #ytm-mini-play:hover {
+                background: rgba(255, 255, 255, 0.15) !important;
             }
 
-            #ytm-pill-container:hover {
-                background: rgba(30, 30, 30, 0.9) !important;
-                border: 1px solid rgba(255, 255, 255, 0.25) !important;
-                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7) !important;
+            /* Like / dislike container */
+            .ytm-mini-like {
+                flex-shrink: 0 !important;
+                display: flex !important;
+                align-items: center !important;
             }
 
-            /* 3. Native renderer overrides */
-            body.ytm-mini-mode ytmusic-like-button-renderer {
+            /* Native like renderer inside our bar */
+            #ytm-mini-bar ytmusic-like-button-renderer {
                 display: flex !important;
                 visibility: visible !important;
                 background: transparent !important;
@@ -68,178 +160,205 @@ function injectMiniCSS() {
                 gap: 2px !important;
                 pointer-events: auto !important;
             }
-
-            /* Force buttons to be visible and white */
-            body.ytm-mini-mode ytmusic-like-button-renderer tp-yt-paper-icon-button,
-            body.ytm-mini-mode ytmusic-like-button-renderer yt-icon,
-            body.ytm-mini-mode ytmusic-like-button-renderer button {
+            #ytm-mini-bar ytmusic-like-button-renderer tp-yt-paper-icon-button,
+            #ytm-mini-bar ytmusic-like-button-renderer yt-icon,
+            #ytm-mini-bar ytmusic-like-button-renderer button {
                 color: #ffffff !important;
                 opacity: 0.8 !important;
                 transition: opacity 0.2s, transform 0.2s !important;
             }
-
-            body.ytm-mini-mode ytmusic-like-button-renderer tp-yt-paper-icon-button:hover {
+            #ytm-mini-bar ytmusic-like-button-renderer tp-yt-paper-icon-button:hover {
                 opacity: 1 !important;
                 transform: scale(1.1) !important;
             }
-
-            /* Active state colors */
-            body.ytm-mini-mode ytmusic-like-button-renderer[like-status="LIKE"] #button-shape-like button {
+            #ytm-mini-bar ytmusic-like-button-renderer[like-status="LIKE"] #button-shape-like button {
                 color: #3ea6ff !important;
                 filter: drop-shadow(0 0 5px rgba(62, 166, 255, 0.5)) !important;
             }
-            body.ytm-mini-mode ytmusic-like-button-renderer[like-status="DISLIKE"] #button-shape-dislike button {
+            #ytm-mini-bar ytmusic-like-button-renderer[like-status="DISLIKE"] #button-shape-dislike button {
                 color: #ff4e4e !important;
                 filter: drop-shadow(0 0 5px rgba(255, 78, 78, 0.5)) !important;
+            }
+
+            /* Responsive: compact at narrow widths */
+            @media (max-width: 480px) {
+                #ytm-mini-bar {
+                    height: 56px !important;
+                    padding: 0 8px !important;
+                    gap: 8px !important;
+                }
+                .ytm-mini-thumb {
+                    width: 40px !important;
+                    height: 40px !important;
+                }
+                .ytm-mini-title {
+                    font-size: 13px !important;
+                }
+                .ytm-mini-artist {
+                    display: none !important;
+                }
+                #ytm-mini-prev, #ytm-mini-next {
+                    display: none !important;
+                }
+            }
+
+            @media (max-width: 360px) {
+                #ytm-mini-bar {
+                    height: 48px !important;
+                    padding: 0 6px !important;
+                    gap: 6px !important;
+                }
+                .ytm-mini-thumb {
+                    width: 36px !important;
+                    height: 36px !important;
+                }
+                .ytm-mini-title {
+                    font-size: 12px !important;
+                }
+                .ytm-mini-like {
+                    display: none !important;
+                }
             }
         }
     `;
     document.head.appendChild(style);
 }
 
-// Drag and drop implementation
-let isDragging = false;
-let startX, startY, initialX, initialY;
 let originalParent = null;
 let originalSibling = null;
 
-function initDraggable(el) {
-    el.addEventListener("mousedown", dragStart);
-    el.addEventListener("touchstart", dragStart, { passive: false });
+function createMiniBarStructure() {
+    const bar = document.createElement("div");
+    bar.id = "ytm-mini-bar";
 
-    function dragStart(e) {
-        // Only allow left-clicks for mouse dragging
-        if (e.type === "mousedown" && e.button !== 0) {
-            return;
-        }
-        // Don't drag if clicking buttons, icons, or role="button" elements
-        if (
-            e.target.closest("button") ||
-            e.target.closest("tp-yt-paper-icon-button") ||
-            e.target.closest("yt-icon") ||
-            e.target.closest('[role="button"]')
-        ) {
-            return;
-        }
+    const progress = document.createElement("div");
+    progress.id = "ytm-mini-progress";
+    const progressFill = document.createElement("div");
+    progressFill.id = "ytm-mini-progress-fill";
+    progress.appendChild(progressFill);
+    bar.appendChild(progress);
 
-        isDragging = true;
-        const clientX = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
+    const thumb = document.createElement("div");
+    thumb.className = "ytm-mini-thumb";
+    bar.appendChild(thumb);
 
-        startX = clientX;
-        startY = clientY;
+    const info = document.createElement("div");
+    info.className = "ytm-mini-info";
+    const title = document.createElement("div");
+    title.className = "ytm-mini-title";
+    const artist = document.createElement("div");
+    artist.className = "ytm-mini-artist";
+    info.appendChild(title);
+    info.appendChild(artist);
+    bar.appendChild(info);
 
-        const rect = el.getBoundingClientRect();
-        // Compensate for transform: translateX(-50%)
-        initialX = rect.left + rect.width / 2;
-        // No vertical translation, so rect.top matches style.top exactly
-        initialY = rect.top;
+    const controls = document.createElement("div");
+    controls.className = "ytm-mini-controls";
+    controls.innerHTML =
+        '<button id="ytm-mini-prev" title="Previous">\u23ee</button>' +
+        '<button id="ytm-mini-play" title="Play">\u25b6</button>' +
+        '<button id="ytm-mini-next" title="Next">\u23ed</button>';
+    bar.appendChild(controls);
 
-        document.addEventListener("mousemove", dragMove);
-        document.addEventListener("mouseup", dragEnd);
-        document.addEventListener("touchmove", dragMove, { passive: false });
-        document.addEventListener("touchend", dragEnd);
-        document.addEventListener("touchcancel", dragEnd);
+    const likeContainer = document.createElement("div");
+    likeContainer.className = "ytm-mini-like";
+    bar.appendChild(likeContainer);
 
-        el.style.transition = "none";
+    return bar;
+}
+
+function updateMiniPlayerBar(bar) {
+    const nativeThumb = document.querySelector("ytmusic-player-bar ytmusic-thumbnail-renderer img");
+    const thumbImg = bar.querySelector(".ytm-mini-thumb img");
+    if (nativeThumb && (!thumbImg || thumbImg.getAttribute("src") !== nativeThumb.getAttribute("src"))) {
+        const thumbEl = bar.querySelector(".ytm-mini-thumb");
+        thumbEl.innerHTML = "";
+        thumbEl.appendChild(nativeThumb.cloneNode(true));
     }
 
-    function dragMove(e) {
-        if (!isDragging) {
-            return;
-        }
-        e.preventDefault();
-
-        const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
-        const clientY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
-
-        const dx = clientX - startX;
-        const dy = clientY - startY;
-
-        const rect = el.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
-
-        let newX = initialX + dx;
-        let newY = initialY + dy;
-
-        // Viewport boundary constraints
-        const minX = width / 2;
-        const maxX = window.innerWidth - width / 2;
-        newX = Math.max(minX, Math.min(maxX, newX));
-
-        const minY = 0;
-        const maxY = window.innerHeight - height;
-        newY = Math.max(minY, Math.min(maxY, newY));
-
-        el.style.left = `${newX}px`;
-        el.style.top = `${newY}px`;
-        el.style.bottom = "auto"; // Disable bottom constraint
+    const nativeTitle = document.querySelector("ytmusic-player-bar .title");
+    const titleEl = bar.querySelector(".ytm-mini-title");
+    if (nativeTitle && titleEl.textContent !== nativeTitle.textContent) {
+        titleEl.textContent = nativeTitle.textContent;
     }
 
-    function dragEnd() {
-        isDragging = false;
-        document.removeEventListener("mousemove", dragMove);
-        document.removeEventListener("mouseup", dragEnd);
-        document.removeEventListener("touchmove", dragMove);
-        document.removeEventListener("touchend", dragEnd);
-        document.removeEventListener("touchcancel", dragEnd);
-        el.style.transition = "background 0.3s, border 0.3s, box-shadow 0.3s";
+    const nativeArtist = document.querySelector("ytmusic-player-bar .byline");
+    const artistEl = bar.querySelector(".ytm-mini-artist");
+    if (nativeArtist && artistEl.textContent !== nativeArtist.textContent) {
+        artistEl.textContent = nativeArtist.textContent;
+    }
+
+    const playBtn = document.getElementById("ytm-mini-play");
+    const video = document.querySelector("video");
+    if (playBtn) {
+        const isPaused = video ? video.paused : true;
+        playBtn.textContent = isPaused ? "\u25b6" : "\u23f8";
+        playBtn.title = isPaused ? "Play" : "Pause";
+    }
+
+    const fill = document.getElementById("ytm-mini-progress-fill");
+    if (video && fill) {
+        const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+        fill.style.width = pct + "%";
+    }
+
+    const likeContainer = bar.querySelector(".ytm-mini-like");
+    if (likeContainer && !likeContainer.querySelector("ytmusic-like-button-renderer")) {
+        const renderers = document.querySelectorAll("ytmusic-like-button-renderer");
+        let primary = null;
+        for (const r of renderers) {
+            if (!bar.contains(r)) {
+                primary = r;
+                break;
+            }
+        }
+        if (primary) {
+            originalParent = primary.parentElement;
+            originalSibling = primary.nextSibling;
+            likeContainer.appendChild(primary);
+        }
     }
 }
 
-function managePillBar() {
+function manageMiniPlayerBar() {
     if (window.innerWidth > 600) {
-        const container = document.getElementById("ytm-pill-container");
-        if (container) {
-            container.style.display = "none";
-            // Restore native renderer to its original position in the DOM
-            if (originalParent) {
-                const renderer = container.querySelector("ytmusic-like-button-renderer");
-                if (renderer) {
-                    if (originalSibling && originalSibling.parentNode === originalParent) {
-                        originalParent.insertBefore(renderer, originalSibling);
-                    } else {
-                        originalParent.appendChild(renderer);
-                    }
+        const bar = document.getElementById("ytm-mini-bar");
+        if (bar) {
+            const renderer = bar.querySelector("ytmusic-like-button-renderer");
+            if (renderer && originalParent) {
+                if (originalSibling && originalSibling.parentNode === originalParent) {
+                    originalParent.insertBefore(renderer, originalSibling);
+                } else {
+                    originalParent.appendChild(renderer);
                 }
             }
+            bar.remove();
         }
         return;
     }
 
-    let container = document.getElementById("ytm-pill-container");
-    if (!container) {
-        container = document.createElement("div");
-        container.id = "ytm-pill-container";
-        document.body.appendChild(container);
-        initDraggable(container);
+    let bar = document.getElementById("ytm-mini-bar");
+    if (!bar) {
+        bar = createMiniBarStructure();
+        document.body.appendChild(bar);
+
+        document.getElementById("ytm-mini-prev").addEventListener("click", function () {
+            const btn = document.querySelector("ytmusic-player-bar #previous-button");
+            if (btn) btn.click();
+        });
+        document.getElementById("ytm-mini-play").addEventListener("click", function () {
+            const btn = document.querySelector(
+                "ytmusic-player-bar #play-button, ytmusic-player-bar #pause-button, ytmusic-player-bar #play-pause-button"
+            );
+            if (btn) btn.click();
+        });
+        document.getElementById("ytm-mini-next").addEventListener("click", function () {
+            const btn = document.querySelector("ytmusic-player-bar #next-button");
+            if (btn) btn.click();
+        });
     }
-    container.style.display = "flex";
 
-    // Move the native renderer into our container if it's not already there
-    const nativeRenderers = document.querySelectorAll("ytmusic-like-button-renderer");
-
-    // Find the one that is NOT in the container (if any)
-    let primaryRenderer = null;
-    for (const renderer of nativeRenderers) {
-        if (renderer.parentElement !== container) {
-            primaryRenderer = renderer;
-            break;
-        }
-    }
-
-    if (primaryRenderer) {
-        // Save original parent and next sibling to restore them later
-        originalParent = primaryRenderer.parentElement;
-        originalSibling = primaryRenderer.nextSibling;
-
-        // Clean container to avoid duplicates shown in user screenshot
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
-        }
-        container.appendChild(primaryRenderer);
-    }
+    updateMiniPlayerBar(bar);
 }
 
 function watchPlayerState() {
@@ -364,5 +483,5 @@ function createNavButtons() {
 setInterval(() => {
     createNavButtons();
     watchPlayerState();
-    managePillBar();
+    manageMiniPlayerBar();
 }, 500);
