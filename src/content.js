@@ -1,18 +1,5 @@
-/**
- * content.js
- *
- * Content script for YTM Mini Mode.
- *
- * Responsibilities:
- * - Inject the mini-player toggle button into YouTube Music.
- * - Apply custom mini mode styling.
- * - Create and manage the draggable pill UI.
- * - Observe page state and send messages to the background runtime.
- */
+// content.js
 
-/**
- * Injects the mini-player CSS only once.
- */
 function injectMiniCSS() {
     if (document.getElementById('ytm-mini-css')) return;
 
@@ -108,16 +95,10 @@ function injectMiniCSS() {
     document.head.appendChild(style);
 }
 
-/**
- * Drag and drop implementation state.
- */
+// Drag and drop implementation
 let isDragging = false;
 let startX, startY, initialX, initialY;
 
-/**
- * Attach drag behavior to the mini-pill container.
- * @param {HTMLElement} el
- */
 function initDraggable(el) {
     el.addEventListener('mousedown', dragStart);
     el.addEventListener('touchstart', dragStart, { passive: false });
@@ -169,10 +150,6 @@ function initDraggable(el) {
     }
 }
 
-/**
- * Create or update the floating pill UI for narrow/mobile layouts.
- * This keeps the mini-player compact while preserving the native like button.
- */
 function managePillBar() {
     if (window.innerWidth > 600) {
         const container = document.getElementById('ytm-pill-container');
@@ -206,10 +183,6 @@ function managePillBar() {
     }
 }
 
-/**
- * Track YouTube Music page state and toggle safe display classes.
- * This helps the injected UI adapt when the page layout changes.
- */
 function watchPlayerState() {
     if (window.innerWidth > 600) {
         document.body.classList.remove('ytm-mini-safe');
@@ -229,9 +202,6 @@ function watchPlayerState() {
     }
 }
 
-/**
- * Create the main mini-player toggle button and support link inside the YTM navigation bar.
- */
 function createNavButtons() {
     if (document.getElementById('ytm-mini-btn')) return;
 
@@ -326,11 +296,7 @@ function createNavButtons() {
     injectMiniCSS();
 }
 
-/**
- * Run a periodic DOM sync because YouTube Music updates its layout dynamically.
- * A short polling interval keeps the injected UI available without waiting for
- * more complex mutation observers.
- */
+// Run checks to keep everything synced
 setInterval(() => {
     createNavButtons();
     watchPlayerState();
