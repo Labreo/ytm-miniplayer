@@ -102,6 +102,14 @@ let isDragging = false;
 let startX, startY, initialX, initialY;
 let originalParent = null;
 let originalSibling = null;
+function isStandalonePwaWindow() {
+    const standaloneDisplayModes = ["standalone", "window-controls-overlay", "minimal-ui"];
+
+    return (
+        standaloneDisplayModes.some((displayMode) => window.matchMedia(`(display-mode: ${displayMode})`).matches) ||
+        window.navigator.standalone === true
+    );
+}
 
 function initDraggable(el) {
     el.addEventListener("mousedown", dragStart);
@@ -320,7 +328,9 @@ function createNavButtons() {
         const messenger = typeof browser !== "undefined" ? browser : chrome;
 
         try {
-            messenger.runtime.sendMessage({ action: "toggle_mini" }).catch((err) => {
+           messenger.runtime
+                .sendMessage({ action: "toggle_mini", isStandalonePwa: isStandalonePwaWindow() })
+                .catch((err) => {
                 console.error("YTM Mini: Failed to send message.", err);
             });
         } catch (err) {
