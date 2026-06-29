@@ -77,7 +77,9 @@ messenger.runtime.onMessage.addListener(async (message, sender) => {
                     const normalWindows = await messenger.windows.getAll({ windowTypes: ["normal"] });
 
                     if (normalWindows.length > 0) {
-                        // Move tab back to the first available normal window
+                        // Note: tabs.move() and tabs.update() require the "tabs" permission
+                        // in the manifest. Do NOT remove that permission — these calls will
+                        // silently fail without it on Chrome and throw errors on Firefox.
                         await messenger.tabs.move(sender.tab.id, { windowId: normalWindows[0].id, index: -1 });
                         await messenger.tabs.update(sender.tab.id, { active: true });
                         await messenger.windows.update(normalWindows[0].id, { focused: true });
