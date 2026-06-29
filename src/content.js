@@ -1,5 +1,7 @@
 // content.js
 
+const messenger = typeof browser !== "undefined" ? browser : chrome;
+
 function injectMiniCSS() {
     if (document.getElementById("ytm-mini-css")) {
         return;
@@ -92,9 +94,53 @@ function injectMiniCSS() {
                 color: #ff4e4e !important;
                 filter: drop-shadow(0 0 5px rgba(255, 78, 78, 0.5)) !important;
             }
+
+            body.ytm-mini-mode {
+                background: #0d0d0d !important;
+            }
+
+            body.ytm-mini-mode ytmusic-nav-bar,
+            body.ytm-mini-mode ytmusic-guide-renderer,
+            body.ytm-mini-mode tp-yt-app-drawer,
+            body.ytm-mini-mode ytmusic-chip-cloud-renderer,
+            body.ytm-mini-mode ytmusic-tab-renderer,
+            body.ytm-mini-mode ytmusic-shelf-renderer,
+            body.ytm-mini-mode ytmusic-secondary-nav-renderer {
+                display: none !important;
+            }
+
+            body.ytm-mini-mode ytmusic-player-page {
+                display: block !important;
+                padding: 14px 14px 20px !important;
+                box-sizing: border-box !important;
+            }
+
+            body.ytm-mini-mode ytmusic-player-page yt-img-shadow img,
+            body.ytm-mini-mode ytmusic-player-page #thumbnail img {
+                border-radius: 10px !important;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+            }
+
+            body.ytm-mini-mode ytmusic-player-page .title,
+            body.ytm-mini-mode ytmusic-player-page .subtitle {
+                text-align: left !important;
+            }
+
+            body.ytm-mini-mode ytmusic-player-page .topbar,
+            body.ytm-mini-mode ytmusic-player-page .header {
+                display: none !important;
+            }
         }
     `;
     document.head.appendChild(style);
+}
+
+function isMiniModeActive() {
+    try {
+        return sessionStorage.getItem("ytm_in_mini_mode") === "true";
+    } catch {
+        return false;
+    }
 }
 
 // Drag and drop implementation
@@ -188,60 +234,6 @@ function initDraggable(el) {
     }
 }
 
-function managePillBar() {
-    if (window.innerWidth > 600) {
-        const container = document.getElementById("ytm-pill-container");
-        if (container) {
-            container.style.display = "none";
-            // Restore native renderer to its original position in the DOM
-            if (originalParent) {
-                const renderer = container.querySelector("ytmusic-like-button-renderer");
-                if (renderer) {
-                    if (originalSibling && originalSibling.parentNode === originalParent) {
-                        originalParent.insertBefore(renderer, originalSibling);
-                    } else {
-                        originalParent.appendChild(renderer);
-                    }
-                }
-            }
-        }
-        return;
-    }
-
-    let container = document.getElementById("ytm-pill-container");
-    if (!container) {
-        container = document.createElement("div");
-        container.id = "ytm-pill-container";
-        document.body.appendChild(container);
-        initDraggable(container);
-    }
-    container.style.display = "flex";
-
-    // Move the native renderer into our container if it's not already there
-    const nativeRenderers = document.querySelectorAll("ytmusic-like-button-renderer");
-
-    // Find the one that is NOT in the container (if any)
-    let primaryRenderer = null;
-    for (const renderer of nativeRenderers) {
-        if (renderer.parentElement !== container) {
-            primaryRenderer = renderer;
-            break;
-        }
-    }
-
-    if (primaryRenderer) {
-        // Save original parent and next sibling to restore them later
-        originalParent = primaryRenderer.parentElement;
-        originalSibling = primaryRenderer.nextSibling;
-
-        // Clean container to avoid duplicates shown in user screenshot
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
-        }
-        container.appendChild(primaryRenderer);
-    }
-}
-
 function watchPlayerState() {
     if (window.innerWidth > 600) {
         document.body.classList.remove("ytm-mini-safe");
@@ -262,23 +254,73 @@ function watchPlayerState() {
     }
 }
 
-function createNavButtons() {
-    if (document.getElementById("ytm-mini-btn")) {
+function sendToggleMiniMessage() {
+    const matchesStandalone = !window.toolbar.visible || window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches;
+    let inMiniMode = false;
+    try {
+        inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
+    } catch {}
+
+    const isEntering = !inMiniMode;
+    const message = { action: "toggle_mini", matchesStandalone, isEntering };
+
+    if (isEntering) {
+        try {
+            sessionStorage.setItem("ytm_in_mini_mode", "true");
+            if (matchesStandalone) {
+                const originalDimensions = {
+                    width: window.outerWidth,
+                    height: window.outerHeight,
+                    left: window.screenX,
+                    top: window.screenY,
+                    state: window.outerWidth >= window.screen.availWidth - 20 && window.outerHeight >= window.screen.availHeight - 20 ? "maximized" : "normal"
+                };
+                sessionStorage.setItem("ytm_original_dimensions", JSON.stringify(originalDimensions));
+            }
+        } catch (err) {
+            console.error("YTM Mini: Failed to save state to sessionStorage", err);
+        }
+    } else {
+        try {
+            if (matchesStandalone) {
+                const stored = sessionStorage.getItem("ytm_original_dimensions");
+                if (stored) {
+                    message.originalDimensions = JSON.parse(stored);
+                }
+            }
+            sessionStorage.removeItem("ytm_in_mini_mode");
+            sessionStorage.removeItem("ytm_original_dimensions");
+        } catch (err) {
+            console.error("YTM Mini: Failed to clear state/load dimensions", err);
+        }
+    }
+
+    messenger.runtime.sendMessage(message).catch((err) => {
+        console.error("YTM Mini: Failed to send message.", err);
+    });
+}
+
+function triggerToggleFromAnyButton() {
+    const mainBtn = document.getElementById("ytm-mini-btn");
+    if (mainBtn) {
+        mainBtn.click();
         return;
     }
 
-    const navBarRight = document.querySelector("ytmusic-nav-bar .right-content");
-    if (!navBarRight) {
-        return;
+    ensureFallbackToggleButton();
+    const fallbackBtn = document.getElementById("ytm-mini-fallback-btn");
+    if (fallbackBtn) {
+        fallbackBtn.click();
     }
+}
 
-    // --- MAIN BUTTON ---
+function createToggleButton() {
     const mainBtn = document.createElement("button");
     mainBtn.id = "ytm-mini-btn";
     mainBtn.title = "Toggle Mini Player (Pop Out/In)";
 
     const iconImg = document.createElement("img");
-    iconImg.src = browser.runtime.getURL("icons/icon-48.png");
+    iconImg.src = messenger.runtime.getURL("icons/icon-48.png");
     iconImg.style.cssText = "width: 32px; height: 32px; display: block;";
 
     mainBtn.appendChild(iconImg);
@@ -301,11 +343,9 @@ function createNavButtons() {
     mainBtn.onmouseout = () => (mainBtn.style.backgroundColor = "transparent");
 
     mainBtn.addEventListener("click", (e) => {
-        // Prevent event from bubbling up to YTM's own listeners
         e.preventDefault();
         e.stopPropagation();
 
-        // Visual feedback
         mainBtn.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
         mainBtn.style.transform = "scale(0.9)";
 
@@ -315,58 +355,50 @@ function createNavButtons() {
         }, 150);
 
         console.log("YTM Mini: Toggle button clicked");
-
-        // Use fallback-safe messenger
-        const messenger = typeof browser !== "undefined" ? browser : chrome;
-
-        try {
-            const matchesStandalone = !window.toolbar.visible || window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches;
-            let inMiniMode = false;
-            try {
-                inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
-            } catch {}
-
-            const isEntering = !inMiniMode;
-            const message = { action: "toggle_mini", matchesStandalone, isEntering };
-
-            if (isEntering) {
-                try {
-                    sessionStorage.setItem("ytm_in_mini_mode", "true");
-                    if (matchesStandalone) {
-                        const originalDimensions = {
-                            width: window.outerWidth,
-                            height: window.outerHeight,
-                            left: window.screenX,
-                            top: window.screenY,
-                            state: window.outerWidth >= window.screen.availWidth - 20 && window.outerHeight >= window.screen.availHeight - 20 ? "maximized" : "normal"
-                        };
-                        sessionStorage.setItem("ytm_original_dimensions", JSON.stringify(originalDimensions));
-                    }
-                } catch (err) {
-                    console.error("YTM Mini: Failed to save state to sessionStorage", err);
-                }
-            } else {
-                try {
-                    if (matchesStandalone) {
-                        const stored = sessionStorage.getItem("ytm_original_dimensions");
-                        if (stored) {
-                            message.originalDimensions = JSON.parse(stored);
-                        }
-                    }
-                    sessionStorage.removeItem("ytm_in_mini_mode");
-                    sessionStorage.removeItem("ytm_original_dimensions");
-                } catch (err) {
-                    console.error("YTM Mini: Failed to clear state/load dimensions", err);
-                }
-            }
-
-            messenger.runtime.sendMessage(message).catch((err) => {
-                console.error("YTM Mini: Failed to send message.", err);
-            });
-        } catch (err) {
-            console.error("YTM Mini: Runtime error during message send.", err);
-        }
+        sendToggleMiniMessage();
     });
+
+    return mainBtn;
+}
+
+function ensureFallbackToggleButton() {
+    if (document.getElementById("ytm-mini-fallback-btn")) {
+        return;
+    }
+
+    let fallbackHost = document.getElementById("ytm-mini-fallback-host");
+    if (!fallbackHost) {
+        fallbackHost = document.createElement("div");
+        fallbackHost.id = "ytm-mini-fallback-host";
+        fallbackHost.style.cssText = `
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 2147483647;
+            display: flex;
+            align-items: center;
+            pointer-events: auto;
+        `;
+        document.body.appendChild(fallbackHost);
+    }
+
+    const fallbackBtn = createToggleButton();
+    fallbackBtn.id = "ytm-mini-fallback-btn";
+    fallbackBtn.setAttribute("aria-label", "Toggle Mini Player");
+    fallbackBtn.style.boxShadow = "0 6px 18px rgba(0, 0, 0, 0.25)";
+    fallbackHost.appendChild(fallbackBtn);
+}
+
+function createNavButtons() {
+    if (document.getElementById("ytm-mini-btn")) {
+        return;
+    }
+
+    const navBarRight = document.querySelector("ytmusic-nav-bar .right-content");
+    if (!navBarRight) {
+        ensureFallbackToggleButton();
+        return;
+    }
 
     // --- SUPPORT BUTTON ---
     const supportBtn = document.createElement("a");
@@ -394,15 +426,21 @@ function createNavButtons() {
     supportBtn.onmouseover = () => (supportBtn.style.backgroundColor = "#4f4f4f");
     supportBtn.onmouseout = () => (supportBtn.style.backgroundColor = "#333333");
 
+    const mainBtn = createToggleButton();
     navBarRight.prepend(supportBtn);
     navBarRight.prepend(mainBtn);
 
     injectMiniCSS();
 }
 
+messenger.runtime.onMessage.addListener((message) => {
+    if (message && message.action === "trigger_mini_toggle") {
+        triggerToggleFromAnyButton();
+    }
+});
+
 // Run checks to keep everything synced
 setInterval(() => {
     createNavButtons();
     watchPlayerState();
-    managePillBar();
 }, 500);

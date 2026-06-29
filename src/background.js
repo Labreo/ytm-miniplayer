@@ -15,6 +15,17 @@ try {
 // Fallback for environments where polyfill might not have attached to global scope correctly
 const messenger = typeof browser !== "undefined" ? browser : chrome;
 
+async function triggerMiniToggleForActiveTab() {
+    const tabs = await messenger.tabs.query({ active: true, currentWindow: true });
+    const activeTab = tabs && tabs[0];
+
+    if (!activeTab || !activeTab.id || !activeTab.url || !activeTab.url.includes("music.youtube.com")) {
+        return;
+    }
+
+    await messenger.tabs.sendMessage(activeTab.id, { action: "trigger_mini_toggle" });
+}
+
 /**
  * 2. Message Listener
  * Handles the 'toggle_mini' action to switch between normal and popup windows.
@@ -103,3 +114,27 @@ messenger.runtime.onMessage.addListener(async (message, sender) => {
         }
     }
 });
+
+if (messenger.action && messenger.action.onClicked) {
+    messenger.action.onClicked.addListener(async () => {
+        try {
+            await triggerMiniToggleForActiveTab();
+        } catch (error) {
+            console.error("Background: Failed to trigger mini toggle from action.", error);
+        }
+    });
+}
+
+if (messenger.commands && messenger.commands.onCommand) {
+    messenger.commands.onCommand.addListener(async (command) => {
+        if (command !== "toggle-mini") {
+            return;
+        }
+
+        try {
+            await triggerMiniToggleForActiveTab();
+        } catch (error) {
+            console.error("Background: Failed to trigger mini toggle from shortcut.", error);
+        }
+    });
+}
