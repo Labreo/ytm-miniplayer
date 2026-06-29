@@ -4,9 +4,6 @@
   "version": "1.4.0",
   "description": "Adds a Mini Player mode to YouTube Music for multitasking.",
   "author": "Kanak Waradkar",
-  "action": {
-    "default_title": "Toggle Mini Player"
-  },
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
@@ -15,14 +12,6 @@
   },
   "permissions": [],
   "host_permissions": ["*://music.youtube.com/*"],
-  "commands": {
-    "toggle-mini": {
-      "suggested_key": {
-        "default": "Alt+Shift+M"
-      },
-      "description": "Toggle YTM Mini Player"
-    }
-  },
   "background": {
     "scripts": ["background.js"]
   },
