@@ -69,6 +69,34 @@ function injectMiniCSS() {
                 pointer-events: auto !important;
             }
 
+            /* 4. Prev / Next buttons inside pill */
+            #ytm-mini-prev,
+            #ytm-mini-next {
+                background: transparent !important;
+                border: none !important;
+                cursor: pointer !important;
+                padding: 6px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                border-radius: 50% !important;
+                transition: opacity 0.2s, transform 0.2s !important;
+            }
+
+            #ytm-mini-prev svg,
+            #ytm-mini-next svg {
+                width: 20px !important;
+                height: 20px !important;
+                fill: #ffffff !important;
+                opacity: 0.8 !important;
+            }
+
+            #ytm-mini-prev:hover svg,
+            #ytm-mini-next:hover svg {
+                opacity: 1 !important;
+                transform: scale(1.1) !important;
+            }
+
             /* Force buttons to be visible and white */
             body.ytm-mini-mode ytmusic-like-button-renderer tp-yt-paper-icon-button,
             body.ytm-mini-mode ytmusic-like-button-renderer yt-icon,
@@ -400,9 +428,39 @@ function createNavButtons() {
     injectMiniCSS();
 }
 
+function createPrevNextButtons() {
+    const container = document.getElementById("ytm-pill-container");
+    if (!container) return;
+    if (document.getElementById("ytm-mini-prev")) return;
+
+    const prevBtn = document.createElement("button");
+    prevBtn.id = "ytm-mini-prev";
+    prevBtn.title = "Previous track";
+    prevBtn.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>`;
+    prevBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const native = document.querySelector(".previous-button, tp-yt-paper-icon-button[aria-label='Previous song'], button[aria-label='Previous song']");
+        if (native) native.click();
+    });
+
+    const nextBtn = document.createElement("button");
+    nextBtn.id = "ytm-mini-next";
+    nextBtn.title = "Next track";
+    nextBtn.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 18l8.5-6L6 6v12zm8.5-6v6h2V6h-2v6z"/></svg>`;
+    nextBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const native = document.querySelector(".next-button, tp-yt-paper-icon-button[aria-label='Next song'], button[aria-label='Next song']");
+        if (native) native.click();
+    });
+
+    container.prepend(nextBtn);
+    container.prepend(prevBtn);
+}
+
 // Run checks to keep everything synced
 setInterval(() => {
     createNavButtons();
     watchPlayerState();
     managePillBar();
+    createPrevNextButtons();
 }, 500);
