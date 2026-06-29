@@ -278,7 +278,9 @@ function createNavButtons() {
     mainBtn.title = "Toggle Mini Player (Pop Out/In)";
 
     const iconImg = document.createElement("img");
-    iconImg.src = browser.runtime.getURL("icons/icon-48.png");
+    // Use safe polyfill fallback — `browser` is not a native global on Chrome
+    const iconMessenger = typeof browser !== "undefined" ? browser : chrome;
+    iconImg.src = iconMessenger.runtime.getURL("icons/icon-48.png");
     iconImg.style.cssText = "width: 32px; height: 32px; display: block;";
 
     mainBtn.appendChild(iconImg);
