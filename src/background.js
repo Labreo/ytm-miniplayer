@@ -20,6 +20,21 @@ const messenger = typeof browser !== "undefined" ? browser : chrome;
  * Handles the 'toggle_mini' action to switch between normal and popup windows.
  */
 messenger.runtime.onMessage.addListener(async (message, sender) => {
+    // New handler: content.js asks "what type is my current window?"
+    // This lets content.js derive mini mode state from reality, not sessionStorage
+    if (message.action === "get_window_type") {
+        if (!sender.tab || !sender.tab.windowId) {
+            return { windowType: "normal" }; // safe fallback
+        }
+        try {
+            const win = await messenger.windows.get(sender.tab.windowId);
+            return { windowType: win.type };
+        } catch (e) {
+            console.warn("Background: get_window_type failed", e);
+            return { windowType: "normal" }; // safe fallback
+        }
+    }
+
     if (message.action === "toggle_mini") {
         console.log("Background: Received toggle_mini request");
 
@@ -29,8 +44,14 @@ messenger.runtime.onMessage.addListener(async (message, sender) => {
             return;
         }
 
-        try {
+         try {
             const currentWindow = await messenger.windows.get(sender.tab.windowId);
+
+            // Send the actual window type back to content.js so it can
+            // derive mini mode state from reality, not from sessionStorage
+            if (message.action === "get_window_type") {
+                return { windowType: currentWindow.type };
+            }
             const isPWA = message.matchesStandalone && currentWindow.type !== "popup";
 
             if (isPWA) {

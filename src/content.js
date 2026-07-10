@@ -300,7 +300,7 @@ function createNavButtons() {
     mainBtn.onmouseover = () => (mainBtn.style.backgroundColor = "rgba(255, 255, 255, 0.1)");
     mainBtn.onmouseout = () => (mainBtn.style.backgroundColor = "transparent");
 
-    mainBtn.addEventListener("click", (e) => {
+    mainBtn.addEventListener("click", async(e) => {
         // Prevent event from bubbling up to YTM's own listeners
         e.preventDefault();
         e.stopPropagation();
@@ -319,12 +319,22 @@ function createNavButtons() {
         // Use fallback-safe messenger
         const messenger = typeof browser !== "undefined" ? browser : chrome;
 
-        try {
+       try {
             const matchesStandalone = !window.toolbar.visible || window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches;
+
+            // Ask background script what type the current window actually is.
+            // This is always accurate — avoids stale sessionStorage state after
+            // tab crash/restore or extension reload.
             let inMiniMode = false;
             try {
-                inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
-            } catch {}
+                const response = await messenger.runtime.sendMessage({ action: "get_window_type" });
+                inMiniMode = response?.windowType === "popup";
+            } catch {
+                // Fallback: if messaging fails, read sessionStorage as last resort
+                try {
+                    inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
+                } catch {}
+            }
 
             const isEntering = !inMiniMode;
             const message = { action: "toggle_mini", matchesStandalone, isEntering };
