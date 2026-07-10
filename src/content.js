@@ -403,8 +403,38 @@ function createNavButtons() {
 }
 
 // Run checks to keep everything synced
-setInterval(() => {
+// --- MutationObserver: replaces setInterval polling ---
+// Fires only when DOM actually changes — no continuous CPU drain.
+
+function initObserver() {
+    // Run once immediately in case DOM is already loaded
     createNavButtons();
     watchPlayerState();
     managePillBar();
-}, 500);
+
+    // Watch body for any DOM changes (nodes added/removed)
+    const observer = new MutationObserver(() => {
+        createNavButtons();
+        watchPlayerState();
+        managePillBar();
+    });
+
+    observer.observe(document.body, {
+        childList: true,  // watch for added/removed nodes
+        subtree: true,    // watch all descendants, not just direct children
+    });
+
+    // resize listener covers window.innerWidth checks in
+    // watchPlayerState() and managePillBar() — those don't fire on DOM mutation
+    window.addEventListener("resize", () => {
+        watchPlayerState();
+        managePillBar();
+    });
+}
+
+// Wait for document.body before starting observer
+if (document.body) {
+    initObserver();
+} else {
+    document.addEventListener("DOMContentLoaded", initObserver);
+}
