@@ -2,7 +2,7 @@ name: Conflict Checker
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     
   schedule:
     - cron: '0 */4 * * *' # Runs every 4 hours matching the repo schedule
