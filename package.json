@@ -5,7 +5,7 @@
   "author": "Kanak Waradkar",
   "license": "MIT",
   "scripts": {
-    "build": "bash build.sh",
+    "build": "node scripts/build.js",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write \"src/**/*.js\" \"*.json\" \"*.sh\" \"*.md\"",
