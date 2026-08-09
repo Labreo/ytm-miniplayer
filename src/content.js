@@ -278,7 +278,9 @@ function createNavButtons() {
     mainBtn.title = "Toggle Mini Player (Pop Out/In)";
 
     const iconImg = document.createElement("img");
-    iconImg.src = browser.runtime.getURL("icons/icon-48.png");
+    // Use safe polyfill fallback — `browser` is not a native global on Chrome
+    const iconMessenger = typeof browser !== "undefined" ? browser : chrome;
+    iconImg.src = iconMessenger.runtime.getURL("icons/icon-48.png");
     iconImg.style.cssText = "width: 32px; height: 32px; display: block;";
 
     mainBtn.appendChild(iconImg);
@@ -300,7 +302,7 @@ function createNavButtons() {
     mainBtn.onmouseover = () => (mainBtn.style.backgroundColor = "rgba(255, 255, 255, 0.1)");
     mainBtn.onmouseout = () => (mainBtn.style.backgroundColor = "transparent");
 
-    mainBtn.addEventListener("click", (e) => {
+    mainBtn.addEventListener("click", async (e) => {
         // Prevent event from bubbling up to YTM's own listeners
         e.preventDefault();
         e.stopPropagation();
@@ -324,10 +326,20 @@ function createNavButtons() {
                 !window.toolbar.visible ||
                 window.matchMedia("(display-mode: standalone)").matches ||
                 window.matchMedia("(display-mode: minimal-ui)").matches;
+
+            // Ask background script what type the current window actually is.
+            // This is always accurate — avoids stale sessionStorage state after
+            // tab crash/restore or extension reload.
             let inMiniMode = false;
             try {
-                inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
-            } catch {}
+                const response = await messenger.runtime.sendMessage({ action: "get_window_type" });
+                inMiniMode = response?.windowType === "popup";
+            } catch {
+                // Fallback: if messaging fails, read sessionStorage as last resort
+                try {
+                    inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
+                } catch {}
+            }
 
             const isEntering = !inMiniMode;
             const message = { action: "toggle_mini", matchesStandalone, isEntering };
@@ -408,8 +420,38 @@ function createNavButtons() {
 }
 
 // Run checks to keep everything synced
-setInterval(() => {
+// --- MutationObserver: replaces setInterval polling ---
+// Fires only when DOM actually changes — no continuous CPU drain.
+
+function initObserver() {
+    // Run once immediately in case DOM is already loaded
     createNavButtons();
     watchPlayerState();
     managePillBar();
-}, 500);
+
+    // Watch body for any DOM changes (nodes added/removed)
+    const observer = new MutationObserver(() => {
+        createNavButtons();
+        watchPlayerState();
+        managePillBar();
+    });
+
+    observer.observe(document.body, {
+        childList: true, // watch for added/removed nodes
+        subtree: true, // watch all descendants, not just direct children
+    });
+
+    // resize listener covers window.innerWidth checks in
+    // watchPlayerState() and managePillBar() — those don't fire on DOM mutation
+    window.addEventListener("resize", () => {
+        watchPlayerState();
+        managePillBar();
+    });
+}
+
+// Wait for document.body before starting observer
+if (document.body) {
+    initObserver();
+} else {
+    document.addEventListener("DOMContentLoaded", initObserver);
+}

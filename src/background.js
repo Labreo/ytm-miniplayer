@@ -20,6 +20,21 @@ const messenger = typeof browser !== "undefined" ? browser : chrome;
  * Handles the 'toggle_mini' action to switch between normal and popup windows.
  */
 messenger.runtime.onMessage.addListener(async (message, sender) => {
+    // New handler: content.js asks "what type is my current window?"
+    // This lets content.js derive mini mode state from reality, not sessionStorage
+    if (message.action === "get_window_type") {
+        if (!sender.tab || !sender.tab.windowId) {
+            return { windowType: "normal" }; // safe fallback
+        }
+        try {
+            const win = await messenger.windows.get(sender.tab.windowId);
+            return { windowType: win.type };
+        } catch (e) {
+            console.warn("Background: get_window_type failed", e);
+            return { windowType: "normal" }; // safe fallback
+        }
+    }
+
     if (message.action === "toggle_mini") {
         console.log("Background: Received toggle_mini request");
 
@@ -31,6 +46,12 @@ messenger.runtime.onMessage.addListener(async (message, sender) => {
 
         try {
             const currentWindow = await messenger.windows.get(sender.tab.windowId);
+
+            // Send the actual window type back to content.js so it can
+            // derive mini mode state from reality, not from sessionStorage
+            if (message.action === "get_window_type") {
+                return { windowType: currentWindow.type };
+            }
             const isPWA = message.matchesStandalone && currentWindow.type !== "popup";
 
             if (isPWA) {
@@ -77,7 +98,9 @@ messenger.runtime.onMessage.addListener(async (message, sender) => {
                     const normalWindows = await messenger.windows.getAll({ windowTypes: ["normal"] });
 
                     if (normalWindows.length > 0) {
-                        // Move tab back to the first available normal window
+                        // Note: tabs.move() and tabs.update() require the "tabs" permission
+                        // in the manifest. Do NOT remove that permission — these calls will
+                        // silently fail without it on Chrome and throw errors on Firefox.
                         await messenger.tabs.move(sender.tab.id, { windowId: normalWindows[0].id, index: -1 });
                         await messenger.tabs.update(sender.tab.id, { active: true });
                         await messenger.windows.update(normalWindows[0].id, { focused: true });
