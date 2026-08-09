@@ -49,8 +49,8 @@ The `src/` folder contains the actual extension logic. Key files to expect:
 |------|------|
 | `content.js` | Injected into `music.youtube.com`. Adds the toggle button to the DOM, handles click events. |
 | `background.js` | Service worker (MV3) or background page (MV2). Manages `chrome.windows` / `browser.windows` API calls to pop out and collapse the window. |
-| `browser-polyfill.min.js'
-| `icons` |  
+| `browser-polyfill.min.js` | Bundled WebExtension polyfill for cross-browser API compatibility. |
+| `icons/` | Extension icons used by both manifests. |
 
 ---
 
