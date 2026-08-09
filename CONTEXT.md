@@ -34,26 +34,26 @@ ytm-miniplayer/
 ├── LICENSE                   # MIT
 ├── PULL_REQUEST_TEMPLATE.md
 ├── README.md
-├── build.sh                  # Build script: copies src + correct manifest into dist/
 ├── eslint.config.js          # ESLint config
 ├── manifest.chrome.json      # Manifest V3 — for Chrome and Edge
 ├── manifest.firefox.json     # Manifest V2 — for Firefox
 ├── package.json
 ├── package-lock.json
 ├── release_notes.md
-└── CONTEXT.md                # This file
+├── scripts/
+│   └── build.js                  # Build script: copies src + correct manifest into dist/
+└── CONTEXT.md                    # This file
 ```
 
 ### `src/` directory (primary working directory)
 
 The `src/` folder contains the actual extension logic. Key files to expect:
 
-| File            | Role                                                                                                                                      |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `content.js`    | Injected into `music.youtube.com`. Adds the toggle button to the DOM, handles click events.                                               |
-| `background.js` | Service worker (MV3) or background page (MV2). Manages `chrome.windows` / `browser.windows` API calls to pop out and collapse the window. |
-
-| `browser-polyfill.min.js' | `icons` |
+| `content.js` | Injected into `music.youtube.com`. Adds the toggle button to the DOM, handles click events. | |
+`background.js` | Service worker (MV3) or background page (MV2). Manages `chrome.windows` / `browser.windows` API calls
+to pop out and collapse the window. | | `browser-polyfill.min.js` | Bundled `webextension-polyfill` script used to
+normalize `browser.*`/`chrome.*` APIs across browsers. | | `icons/` | Extension icons referenced by the manifests and
+store listings. |
 
 ---
 
@@ -93,7 +93,7 @@ This project maintains **two separate manifests**:
 | Browser Action | `action`               | `browser_action`                             |
 | Target         | Chrome, Edge           | Firefox                                      |
 
-The `build.sh` script copies the right manifest as `manifest.json` into each browser's `dist/` folder.
+The build script copies the right manifest as `manifest.json` into each browser's `dist/` folder.
 
 **Firefox MV3 note:** Firefox has begun supporting Manifest V3 but with differences from Chrome's MV3 implementation.
 Migration is a known future task.
@@ -102,15 +102,15 @@ Migration is a known future task.
 
 ## Build System
 
-No bundler (no Webpack/Vite/Rollup). The build process is a plain bash script.
+No bundler (no Webpack/Vite/Rollup). The build process is a Node.js script.
 
 ```bash
-npm run build       # Runs build.sh
+npm run build       # Runs scripts/build.js
 # Or directly:
-bash build.sh
+node scripts/build.js
 ```
 
-**What `build.sh` does:**
+**What the build script does:**
 
 1. Copies `src/` into `dist/chrome/`, `dist/firefox/`, and `dist/edge/`
 2. Places the correct manifest into each folder
@@ -180,7 +180,7 @@ CI checks (GitHub Actions) cover only linting and formatting, not runtime behavi
 When helping with this project:
 
 1. **Always check both manifests** when changes touch permissions, background scripts, or browser actions.
-2. **Run `build.sh` mentally** — remember that `dist/` is generated. Source of truth is `src/`.
+2. **Remember that `dist/` is generated** — source of truth is `src/`. Run `npm run build` to regenerate it.
 3. **Prefer additive changes** — this is a published extension with real users. Avoid breaking existing window
    management behavior.
 4. **Follow the existing vanilla JS style** — no framework introductions without maintainer discussion.
