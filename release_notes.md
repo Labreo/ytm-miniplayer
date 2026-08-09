@@ -8,8 +8,11 @@ All notable changes to the **YTM Mini Mode** extension will be documented in thi
 
 ### Added
 
-- **PWA Integration Support**: Standalone PWA windows now resize directly in-place when entering/exiting mini-player mode instead of closing the PWA and detaching into standard browser tabs. This preserves the independent PWA app icon in the macOS Dock and Command+Tab switcher.
-- **Robust Environment Detection**: Replaced unreliable media query checks with direct toolbar visibility verification to guarantee accurate detection of standalone vs. browser tab environments.
+- **PWA Integration Support**: Standalone PWA windows now resize directly in-place when entering/exiting mini-player
+  mode instead of closing the PWA and detaching into standard browser tabs. This preserves the independent PWA app icon
+  in the macOS Dock and Command+Tab switcher.
+- **Robust Environment Detection**: Replaced unreliable media query checks with direct toolbar visibility verification
+  to guarantee accurate detection of standalone vs. browser tab environments.
 
 ---
 
