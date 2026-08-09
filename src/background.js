@@ -46,10 +46,10 @@ messenger.runtime.onMessage.addListener(async (message, sender) => {
                     console.log("Background: PWA Reverting to normal...");
                     const dims = message.originalDimensions || {};
                     const targetState = dims.state || "normal";
-                    
+
                     // 1. Update state first
                     await messenger.windows.update(sender.tab.windowId, { state: targetState });
-                    
+
                     // 2. Update bounds only if the target state is normal
                     if (targetState === "normal") {
                         const bounds = {};
@@ -65,7 +65,7 @@ messenger.runtime.onMessage.addListener(async (message, sender) => {
                         if (typeof dims.top === "number") {
                             bounds.top = dims.top;
                         }
-                        
+
                         if (Object.keys(bounds).length > 0) {
                             await messenger.windows.update(sender.tab.windowId, bounds);
                         }

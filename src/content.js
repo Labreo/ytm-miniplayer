@@ -320,7 +320,10 @@ function createNavButtons() {
         const messenger = typeof browser !== "undefined" ? browser : chrome;
 
         try {
-            const matchesStandalone = !window.toolbar.visible || window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches;
+            const matchesStandalone =
+                !window.toolbar.visible ||
+                window.matchMedia("(display-mode: standalone)").matches ||
+                window.matchMedia("(display-mode: minimal-ui)").matches;
             let inMiniMode = false;
             try {
                 inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
@@ -338,7 +341,11 @@ function createNavButtons() {
                             height: window.outerHeight,
                             left: window.screenX,
                             top: window.screenY,
-                            state: window.outerWidth >= window.screen.availWidth - 20 && window.outerHeight >= window.screen.availHeight - 20 ? "maximized" : "normal"
+                            state:
+                                window.outerWidth >= window.screen.availWidth - 20 &&
+                                window.outerHeight >= window.screen.availHeight - 20
+                                    ? "maximized"
+                                    : "normal",
                         };
                         sessionStorage.setItem("ytm_original_dimensions", JSON.stringify(originalDimensions));
                     }
