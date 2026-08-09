@@ -169,7 +169,7 @@ full code style rules, PR expectations, and standard practices.
 
 **Have questions or want to discuss a major feature?** Reach out to me directly on **Discord**: `.kakaroth`
 
-If this extension makes your daily workflow a little smoother, consider ⭐ starring the repo!
+If this extension makes your daily workflow a little smoother, consider supporting the development!
 
 [![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://www.buymeacoffee.com/kakeroth)
 
