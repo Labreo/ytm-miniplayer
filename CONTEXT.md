@@ -31,7 +31,7 @@ ytm-miniplayer/
 ├── LICENSE                   # MIT
 ├── PULL_REQUEST_TEMPLATE.md
 ├── README.md
-├── build.sh                  # Build script: copies src + correct manifest into dist/
+├── scripts/build.js          # Build script: copies src + correct manifest into dist/
 ├── eslint.config.js          # ESLint config
 ├── manifest.chrome.json      # Manifest V3 — for Chrome and Edge
 ├── manifest.firefox.json     # Manifest V2 — for Firefox
@@ -89,7 +89,7 @@ This project maintains **two separate manifests**:
 | Browser Action | `action` | `browser_action` |
 | Target | Chrome, Edge | Firefox |
 
-The `build.sh` script copies the right manifest as `manifest.json` into each browser's `dist/` folder.
+The `scripts/build.js` script copies the right manifest as `manifest.json` into each browser's `dist/` folder.
 
 **Firefox MV3 note:** Firefox has begun supporting Manifest V3 but with differences from Chrome's MV3 implementation. Migration is a known future task.
 
@@ -97,15 +97,15 @@ The `build.sh` script copies the right manifest as `manifest.json` into each bro
 
 ## Build System
 
-No bundler (no Webpack/Vite/Rollup). The build process is a plain bash script.
+No bundler (no Webpack/Vite/Rollup). The build process is a plain Node.js script.
 
 ```bash
-npm run build       # Runs build.sh
+npm run build       # Runs scripts/build.js
 # Or directly:
-bash build.sh
+node scripts/build.js
 ```
 
-**What `build.sh` does:**
+**What `scripts/build.js` does:**
 1. Copies `src/` into `dist/chrome/`, `dist/firefox/`, and `dist/edge/`
 2. Places the correct manifest into each folder
 3. Output in `dist/` is store-ready and `.gitignore`d
@@ -161,7 +161,7 @@ CI checks (GitHub Actions) cover only linting and formatting, not runtime behavi
 
 When helping with this project:
 1. **Always check both manifests** when changes touch permissions, background scripts, or browser actions.
-2. **Run `build.sh` mentally** — remember that `dist/` is generated. Source of truth is `src/`.
+2. **Run `scripts/build.js` mentally** — remember that `dist/` is generated. Source of truth is `src/`.
 3. **Prefer additive changes** — this is a published extension with real users. Avoid breaking existing window management behavior.
 4. **Follow the existing vanilla JS style** — no framework introductions without maintainer discussion.
 5. **Check `CONTRIBUTING.md`** for PR-specific requirements before generating a pull request description.
