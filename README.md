@@ -180,5 +180,3 @@ If this extension makes your daily workflow a little smoother, consider ⭐ star
 Distributed under the MIT License. See `LICENSE` for more information.
 
 **Built by Kanak Waradkar**
-
-

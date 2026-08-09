@@ -302,7 +302,7 @@ function createNavButtons() {
     mainBtn.onmouseover = () => (mainBtn.style.backgroundColor = "rgba(255, 255, 255, 0.1)");
     mainBtn.onmouseout = () => (mainBtn.style.backgroundColor = "transparent");
 
-    mainBtn.addEventListener("click", async(e) => {
+    mainBtn.addEventListener("click", async (e) => {
         // Prevent event from bubbling up to YTM's own listeners
         e.preventDefault();
         e.stopPropagation();
@@ -321,8 +321,11 @@ function createNavButtons() {
         // Use fallback-safe messenger
         const messenger = typeof browser !== "undefined" ? browser : chrome;
 
-       try {
-            const matchesStandalone = !window.toolbar.visible || window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches;
+        try {
+            const matchesStandalone =
+                !window.toolbar.visible ||
+                window.matchMedia("(display-mode: standalone)").matches ||
+                window.matchMedia("(display-mode: minimal-ui)").matches;
 
             // Ask background script what type the current window actually is.
             // This is always accurate — avoids stale sessionStorage state after
@@ -350,7 +353,11 @@ function createNavButtons() {
                             height: window.outerHeight,
                             left: window.screenX,
                             top: window.screenY,
-                            state: window.outerWidth >= window.screen.availWidth - 20 && window.outerHeight >= window.screen.availHeight - 20 ? "maximized" : "normal"
+                            state:
+                                window.outerWidth >= window.screen.availWidth - 20 &&
+                                window.outerHeight >= window.screen.availHeight - 20
+                                    ? "maximized"
+                                    : "normal",
                         };
                         sessionStorage.setItem("ytm_original_dimensions", JSON.stringify(originalDimensions));
                     }
@@ -430,8 +437,8 @@ function initObserver() {
     });
 
     observer.observe(document.body, {
-        childList: true,  // watch for added/removed nodes
-        subtree: true,    // watch all descendants, not just direct children
+        childList: true, // watch for added/removed nodes
+        subtree: true, // watch all descendants, not just direct children
     });
 
     // resize listener covers window.innerWidth checks in

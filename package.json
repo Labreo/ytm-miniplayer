@@ -8,8 +8,8 @@
     "build": "node scripts/build.js",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
-    "format": "prettier --write \"src/**/*.js\" \"*.json\" \"*.sh\" \"*.md\"",
-    "format:check": "prettier --check \"src/**/*.js\" \"*.json\" \"*.sh\" \"*.md\""
+    "format": "prettier --write \"src/**/*.js\" \"*.json\" \"*.md\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"*.json\" \"*.md\""
   },
   "devDependencies": {
     "eslint": "^9.0.0",
