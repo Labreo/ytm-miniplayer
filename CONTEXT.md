@@ -97,7 +97,7 @@ The `scripts/build.js` script copies the right manifest as `manifest.json` into 
 
 ## Build System
 
-No bundler (no Webpack/Vite/Rollup). The build process uses a plain Node.js script.
+No bundler (no Webpack/Vite/Rollup). The build process is a plain Node.js script.
 
 ```bash
 npm run build       # Runs scripts/build.js
@@ -161,7 +161,7 @@ CI checks (GitHub Actions) cover only linting and formatting, not runtime behavi
 
 When helping with this project:
 1. **Always check both manifests** when changes touch permissions, background scripts, or browser actions.
-2. **Run `npm run build` mentally** — remember that `dist/` is generated. Source of truth is `src/`.
+2. **Run `scripts/build.js` mentally** — remember that `dist/` is generated. Source of truth is `src/`.
 3. **Prefer additive changes** — this is a published extension with real users. Avoid breaking existing window management behavior.
 4. **Follow the existing vanilla JS style** — no framework introductions without maintainer discussion.
 5. **Check `CONTRIBUTING.md`** for PR-specific requirements before generating a pull request description.
