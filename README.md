@@ -9,11 +9,34 @@ A lightweight, distraction-free mini-player extension for YouTube Music, availab
 
 ## 📥 Installation
 
+```bash
+git clone https://github.com/Labreo/ytm-miniplayer.git
+cd ytm-miniplayer
+npm install
+npm run build
+```
+
+See [Local Setup Instructions](#-local-setup-instructions) for full details.
+
 <a href="https://addons.mozilla.org/en-US/firefox/addon/ytm-mini-mode/"><img src="https://user-images.githubusercontent.com/585534/107280546-7b9b2a00-6a26-11eb-8f9f-f95932f4bfec.png" alt="Get YTM Mini Mode for Firefox" height="40"></a>
 
 <a href="https://microsoftedge.microsoft.com/addons/detail/ytm-mini-mode/cccmmkfhbjgchhgfacbllhkpgblfaodj"><img src="https://user-images.githubusercontent.com/585534/107280673-a5ece780-6a26-11eb-9cc7-9fa9f9f81180.png" alt="Get YTM Mini Mode for Microsoft Edge" height="40"></a>
 
 <a href="https://chromewebstore.google.com/detail/ytm-mini-mode/lpfejlnnjobhdpbhdlmhmmhhmphhbdda"><img src="https://user-images.githubusercontent.com/585534/107280622-91a8ea80-6a26-11eb-8d07-77c548b28665.png" alt="Get YTM Mini Mode for Chrome" height="40"></a>
+
+## 📚 Table of Contents
+
+- [Project Purpose](#-project-purpose)
+- [Features](#-features)
+- [Tech Stack](#️-tech-stack)
+- [Installation](#-installation)
+- [Local Setup Instructions](#-local-setup-instructions)
+- [Windows Setup Notes](#-windows-setup-notes)
+- [Usage](#️-usage)
+- [Contribution Guidelines](#-contribution-guidelines)
+- [Contact & Support](#-contact--support)
+- [License](#-license)
+
 
 ## 📖 Project Purpose
 
@@ -23,7 +46,7 @@ YouTube Music is great, but managing playback while coding or studying often mea
 With one click, your music pops out into a clean, responsive, and persistent mini-window. Click it again, and it
 seamlessly pops back into your main browser window without interrupting playback.
 
-### ✨ Features
+## ✨ Features
 
 - **Seamless Window Management:** Pop the player out into a mini-window, or pop it back into your main browser session.
 - **Responsive Design:** Optimized CSS ensures album art and song titles scale perfectly.
@@ -118,6 +141,17 @@ After building:
 - Click "Load unpacked"
 - Select the `dist/chrome` folder
 
+---
+
+## ▶️ Usage
+
+1. Open YouTube Music and start playing a song.
+2. Click the mini-player toggle button added by the extension.
+3. The player opens in a compact mini-window.
+4. Click the toggle again to return playback to the main browser tab.
+
+---
+
 ## 🤝 Contribution Guidelines
 
 Contributions, issues, and feature requests are highly encouraged!
@@ -146,34 +180,3 @@ If this extension makes your daily workflow a little smoother, consider supporti
 Distributed under the MIT License. See `LICENSE` for more information.
 
 **Built by Kanak Waradkar**
-
-## ✨ README Improvement Notes
-
-### 📌 Formatting Enhancements Needed
-
-- Improve heading hierarchy for better readability
-- Ensure consistent spacing between sections
-- Use proper Markdown formatting for code blocks and lists
-- Align all installation and usage steps properly
-
-### 🚀 Suggested Structure Upgrade
-
-- Introduction
-- Features
-- Tech Stack
-- Installation
-- Usage
-- Project Structure
-- Contribution Guidelines
-- License
-
-### 🛠️ Documentation Improvements
-
-- Add badges (optional): build, license, contributors
-- Add screenshots for better UI understanding
-- Standardize code blocks for commands
-
-### 🎯 Goal
-
-Improve onboarding experience for new contributors and users by making README more structured, readable, and
-professional.
