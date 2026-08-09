@@ -34,6 +34,7 @@ ytm-miniplayer/
 ├── LICENSE                   # MIT
 ├── PULL_REQUEST_TEMPLATE.md
 ├── README.md
+├── scripts/build.js          # Build script: copies src + correct manifest into dist/
 ├── eslint.config.js          # ESLint config
 ├── manifest.chrome.json      # Manifest V3 — for Chrome and Edge
 ├── manifest.firefox.json     # Manifest V2 — for Firefox
@@ -49,11 +50,12 @@ ytm-miniplayer/
 
 The `src/` folder contains the actual extension logic. Key files to expect:
 
-| `content.js` | Injected into `music.youtube.com`. Adds the toggle button to the DOM, handles click events. | |
-`background.js` | Service worker (MV3) or background page (MV2). Manages `chrome.windows` / `browser.windows` API calls
-to pop out and collapse the window. | | `browser-polyfill.min.js` | Bundled `webextension-polyfill` script used to
-normalize `browser.*`/`chrome.*` APIs across browsers. | | `icons/` | Extension icons referenced by the manifests and
-store listings. |
+| File | Role |
+|------|------|
+| `content.js` | Injected into `music.youtube.com`. Adds the toggle button to the DOM, handles click events. |
+| `background.js` | Service worker (MV3) or background page (MV2). Manages `chrome.windows` / `browser.windows` API calls to pop out and collapse the window. |
+| `browser-polyfill.min.js` | Bundled WebExtension polyfill for cross-browser API compatibility. |
+| `icons/` | Extension icons used by both manifests. |
 
 ---
 
@@ -93,7 +95,7 @@ This project maintains **two separate manifests**:
 | Browser Action | `action`               | `browser_action`                             |
 | Target         | Chrome, Edge           | Firefox                                      |
 
-The build script copies the right manifest as `manifest.json` into each browser's `dist/` folder.
+The `scripts/build.js` script copies the right manifest as `manifest.json` into each browser's `dist/` folder.
 
 **Firefox MV3 note:** Firefox has begun supporting Manifest V3 but with differences from Chrome's MV3 implementation.
 Migration is a known future task.
@@ -102,7 +104,7 @@ Migration is a known future task.
 
 ## Build System
 
-No bundler (no Webpack/Vite/Rollup). The build process is a Node.js script.
+No bundler (no Webpack/Vite/Rollup). The build process is a plain Node.js script.
 
 ```bash
 npm run build       # Runs scripts/build.js
@@ -110,8 +112,7 @@ npm run build       # Runs scripts/build.js
 node scripts/build.js
 ```
 
-**What the build script does:**
-
+**What `scripts/build.js` does:**
 1. Copies `src/` into `dist/chrome/`, `dist/firefox/`, and `dist/edge/`
 2. Places the correct manifest into each folder
 3. Output in `dist/` is store-ready and `.gitignore`d
@@ -180,9 +181,8 @@ CI checks (GitHub Actions) cover only linting and formatting, not runtime behavi
 When helping with this project:
 
 1. **Always check both manifests** when changes touch permissions, background scripts, or browser actions.
-2. **Remember that `dist/` is generated** — source of truth is `src/`. Run `npm run build` to regenerate it.
-3. **Prefer additive changes** — this is a published extension with real users. Avoid breaking existing window
-   management behavior.
+2. **Run `scripts/build.js` mentally** — remember that `dist/` is generated. Source of truth is `src/`.
+3. **Prefer additive changes** — this is a published extension with real users. Avoid breaking existing window management behavior.
 4. **Follow the existing vanilla JS style** — no framework introductions without maintainer discussion.
 5. **Check `CONTRIBUTING.md`** for PR-specific requirements before generating a pull request description.
 
