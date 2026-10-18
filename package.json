@@ -9,11 +9,13 @@
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write \"src/**/*.js\" \"*.json\" \"*.md\"",
-    "format:check": "prettier --check \"src/**/*.js\" \"*.json\" \"*.md\""
+    "format:check": "prettier --check \"src/**/*.js\" \"*.json\" \"*.md\"",
+    "test": "node --test tests/**/*.test.js"
   },
   "devDependencies": {
     "eslint": "^9.0.0",
     "globals": "^15.0.0",
+    "jsdom": "^29.1.1",
     "prettier": "^3.0.0",
     "webextension-polyfill": "^0.12.0"
   }

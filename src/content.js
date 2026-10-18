@@ -479,3 +479,7 @@ if (document.body) {
 } else {
     document.addEventListener("DOMContentLoaded", initObserver);
 }
+
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = { watchPlayerState, managePillBar, createNavButtons, injectMiniCSS };
+}
