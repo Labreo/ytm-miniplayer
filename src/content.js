@@ -262,17 +262,92 @@ function watchPlayerState() {
     }
 }
 
-function createNavButtons() {
-    if (document.getElementById("ytm-mini-btn")) {
-        return;
-    }
+async function handleMainBtnClick(e, mainBtn) {
+    // Prevent event from bubbling up to YTM's own listeners
+    e.preventDefault();
+    e.stopPropagation();
 
-    const navBarRight = document.querySelector("ytmusic-nav-bar .right-content");
-    if (!navBarRight) {
-        return;
-    }
+    // Visual feedback
+    mainBtn.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+    mainBtn.style.transform = "scale(0.9)";
 
-    // --- MAIN BUTTON ---
+    setTimeout(() => {
+        mainBtn.style.transform = "scale(1)";
+        mainBtn.style.backgroundColor = "transparent";
+    }, 150);
+
+    console.log("YTM Mini: Toggle button clicked");
+
+    // Use fallback-safe messenger
+    const messenger = typeof browser !== "undefined" ? browser : chrome;
+
+    try {
+        const matchesStandalone =
+            !window.toolbar.visible ||
+            window.matchMedia("(display-mode: standalone)").matches ||
+            window.matchMedia("(display-mode: minimal-ui)").matches;
+
+        // Ask background script what type the current window actually is.
+        // This is always accurate — avoids stale sessionStorage state after
+        // tab crash/restore or extension reload.
+        let inMiniMode = false;
+        try {
+            const response = await messenger.runtime.sendMessage({ action: "get_window_type" });
+            inMiniMode = response?.windowType === "popup";
+        } catch {
+            // Fallback: if messaging fails, read sessionStorage as last resort
+            try {
+                inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
+            } catch {}
+        }
+
+        const isEntering = !inMiniMode;
+        const message = { action: "toggle_mini", matchesStandalone, isEntering };
+
+        if (isEntering) {
+            try {
+                sessionStorage.setItem("ytm_in_mini_mode", "true");
+                if (matchesStandalone) {
+                    const originalDimensions = {
+                        width: window.outerWidth,
+                        height: window.outerHeight,
+                        left: window.screenX,
+                        top: window.screenY,
+                        state:
+                            window.outerWidth >= window.screen.availWidth - 20 &&
+                            window.outerHeight >= window.screen.availHeight - 20
+                                ? "maximized"
+                                : "normal",
+                    };
+                    sessionStorage.setItem("ytm_original_dimensions", JSON.stringify(originalDimensions));
+                }
+            } catch (err) {
+                console.error("YTM Mini: Failed to save state to sessionStorage", err);
+            }
+        } else {
+            try {
+                if (matchesStandalone) {
+                    const stored = sessionStorage.getItem("ytm_original_dimensions");
+                    if (stored) {
+                        message.originalDimensions = JSON.parse(stored);
+                    }
+                }
+                sessionStorage.removeItem("ytm_in_mini_mode");
+                sessionStorage.removeItem("ytm_original_dimensions");
+            } catch (err) {
+                console.error("YTM Mini: Failed to clear state/load dimensions", err);
+            }
+        }
+
+        messenger.runtime.sendMessage(message).catch((err) => {
+            console.error("YTM Mini: Failed to send message.", err);
+        });
+    } catch (err) {
+        console.error("YTM Mini: Runtime error during message send.", err);
+    }
+}
+
+function createMainButton() {
     const mainBtn = document.createElement("button");
     mainBtn.id = "ytm-mini-btn";
     mainBtn.title = "Toggle Mini Player (Pop Out/In)";
@@ -302,92 +377,12 @@ function createNavButtons() {
     mainBtn.onmouseover = () => (mainBtn.style.backgroundColor = "rgba(255, 255, 255, 0.1)");
     mainBtn.onmouseout = () => (mainBtn.style.backgroundColor = "transparent");
 
-    mainBtn.addEventListener("click", async (e) => {
-        // Prevent event from bubbling up to YTM's own listeners
-        e.preventDefault();
-        e.stopPropagation();
+    mainBtn.addEventListener("click", (e) => handleMainBtnClick(e, mainBtn));
 
-        // Visual feedback
-        mainBtn.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
-        mainBtn.style.transform = "scale(0.9)";
+    return mainBtn;
+}
 
-        setTimeout(() => {
-            mainBtn.style.transform = "scale(1)";
-            mainBtn.style.backgroundColor = "transparent";
-        }, 150);
-
-        console.log("YTM Mini: Toggle button clicked");
-
-        // Use fallback-safe messenger
-        const messenger = typeof browser !== "undefined" ? browser : chrome;
-
-        try {
-            const matchesStandalone =
-                !window.toolbar.visible ||
-                window.matchMedia("(display-mode: standalone)").matches ||
-                window.matchMedia("(display-mode: minimal-ui)").matches;
-
-            // Ask background script what type the current window actually is.
-            // This is always accurate — avoids stale sessionStorage state after
-            // tab crash/restore or extension reload.
-            let inMiniMode = false;
-            try {
-                const response = await messenger.runtime.sendMessage({ action: "get_window_type" });
-                inMiniMode = response?.windowType === "popup";
-            } catch {
-                // Fallback: if messaging fails, read sessionStorage as last resort
-                try {
-                    inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
-                } catch {}
-            }
-
-            const isEntering = !inMiniMode;
-            const message = { action: "toggle_mini", matchesStandalone, isEntering };
-
-            if (isEntering) {
-                try {
-                    sessionStorage.setItem("ytm_in_mini_mode", "true");
-                    if (matchesStandalone) {
-                        const originalDimensions = {
-                            width: window.outerWidth,
-                            height: window.outerHeight,
-                            left: window.screenX,
-                            top: window.screenY,
-                            state:
-                                window.outerWidth >= window.screen.availWidth - 20 &&
-                                window.outerHeight >= window.screen.availHeight - 20
-                                    ? "maximized"
-                                    : "normal",
-                        };
-                        sessionStorage.setItem("ytm_original_dimensions", JSON.stringify(originalDimensions));
-                    }
-                } catch (err) {
-                    console.error("YTM Mini: Failed to save state to sessionStorage", err);
-                }
-            } else {
-                try {
-                    if (matchesStandalone) {
-                        const stored = sessionStorage.getItem("ytm_original_dimensions");
-                        if (stored) {
-                            message.originalDimensions = JSON.parse(stored);
-                        }
-                    }
-                    sessionStorage.removeItem("ytm_in_mini_mode");
-                    sessionStorage.removeItem("ytm_original_dimensions");
-                } catch (err) {
-                    console.error("YTM Mini: Failed to clear state/load dimensions", err);
-                }
-            }
-
-            messenger.runtime.sendMessage(message).catch((err) => {
-                console.error("YTM Mini: Failed to send message.", err);
-            });
-        } catch (err) {
-            console.error("YTM Mini: Runtime error during message send.", err);
-        }
-    });
-
-    // --- SUPPORT BUTTON ---
+function createSupportButton() {
     const supportBtn = document.createElement("a");
     supportBtn.href = "https://www.buymeacoffee.com/kakeroth";
     supportBtn.target = "_blank";
@@ -412,6 +407,22 @@ function createNavButtons() {
 
     supportBtn.onmouseover = () => (supportBtn.style.backgroundColor = "#4f4f4f");
     supportBtn.onmouseout = () => (supportBtn.style.backgroundColor = "#333333");
+
+    return supportBtn;
+}
+
+function createNavButtons() {
+    if (document.getElementById("ytm-mini-btn")) {
+        return;
+    }
+
+    const navBarRight = document.querySelector("ytmusic-nav-bar .right-content");
+    if (!navBarRight) {
+        return;
+    }
+
+    const supportBtn = createSupportButton();
+    const mainBtn = createMainButton();
 
     navBarRight.prepend(supportBtn);
     navBarRight.prepend(mainBtn);
