@@ -50,12 +50,12 @@ ytm-miniplayer/
 
 The `src/` folder contains the actual extension logic. Key files to expect:
 
-| File | Role |
-|------|------|
-| `content.js` | Injected into `music.youtube.com`. Adds the toggle button to the DOM, handles click events. |
-| `background.js` | Service worker (MV3) or background page (MV2). Manages `chrome.windows` / `browser.windows` API calls to pop out and collapse the window. |
-| `browser-polyfill.min.js` | Bundled WebExtension polyfill for cross-browser API compatibility. |
-| `icons/` | Extension icons used by both manifests. |
+| File                      | Role                                                                                                                                      |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `content.js`              | Injected into `music.youtube.com`. Adds the toggle button to the DOM, handles click events.                                               |
+| `background.js`           | Service worker (MV3) or background page (MV2). Manages `chrome.windows` / `browser.windows` API calls to pop out and collapse the window. |
+| `browser-polyfill.min.js` | Bundled WebExtension polyfill for cross-browser API compatibility.                                                                        |
+| `icons/`                  | Extension icons used by both manifests.                                                                                                   |
 
 ---
 
@@ -113,6 +113,7 @@ node scripts/build.js
 ```
 
 **What `scripts/build.js` does:**
+
 1. Copies `src/` into `dist/chrome/`, `dist/firefox/`, and `dist/edge/`
 2. Places the correct manifest into each folder
 3. Output in `dist/` is store-ready and `.gitignore`d
@@ -182,7 +183,8 @@ When helping with this project:
 
 1. **Always check both manifests** when changes touch permissions, background scripts, or browser actions.
 2. **Run `scripts/build.js` mentally** — remember that `dist/` is generated. Source of truth is `src/`.
-3. **Prefer additive changes** — this is a published extension with real users. Avoid breaking existing window management behavior.
+3. **Prefer additive changes** — this is a published extension with real users. Avoid breaking existing window
+   management behavior.
 4. **Follow the existing vanilla JS style** — no framework introductions without maintainer discussion.
 5. **Check `CONTRIBUTING.md`** for PR-specific requirements before generating a pull request description.
 

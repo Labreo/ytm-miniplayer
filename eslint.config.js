@@ -14,7 +14,8 @@ export default [
         ...globals.browser,
         browser: "readonly",  // webextension-polyfill global
         chrome: "readonly",   // chrome extension API global
-        importScripts: "readonly", // service worker importScripts global
+        importScripts: "readonly",
+        module: "readonly", // service worker importScripts global
       },
     },
     rules: {
