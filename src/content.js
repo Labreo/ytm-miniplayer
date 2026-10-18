@@ -391,6 +391,7 @@ function createNavButtons() {
     const supportBtn = document.createElement("a");
     supportBtn.href = "https://www.buymeacoffee.com/kakeroth";
     supportBtn.target = "_blank";
+    supportBtn.rel = "noopener noreferrer";
     supportBtn.innerText = "☕";
     supportBtn.title = "Support development";
 
