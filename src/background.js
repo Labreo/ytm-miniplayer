@@ -36,8 +36,6 @@ messenger.runtime.onMessage.addListener(async (message, sender) => {
     }
 
     if (message.action === "toggle_mini") {
-        console.log("Background: Received toggle_mini request");
-
         // Safety check: Ensure we have a valid tab to move/resize
         if (!sender.tab || !sender.tab.id) {
             console.error("Background: No tab information in sender context.");

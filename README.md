@@ -37,7 +37,6 @@ See [Local Setup Instructions](#-local-setup-instructions) for full details.
 - [Contact & Support](#-contact--support)
 - [License](#-license)
 
-
 ## 📖 Project Purpose
 
 YouTube Music is great, but managing playback while coding or studying often means hunting through dozens of open tabs.
