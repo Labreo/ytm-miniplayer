@@ -440,11 +440,24 @@ function initObserver() {
     watchPlayerState();
     managePillBar();
 
+    let isScheduled = false;
+
+    function scheduleDOMUpdate() {
+        if (isScheduled) {
+            return;
+        }
+        isScheduled = true;
+        requestAnimationFrame(() => {
+            isScheduled = false;
+            createNavButtons();
+            watchPlayerState();
+            managePillBar();
+        });
+    }
+
     // Watch body for any DOM changes (nodes added/removed)
     const observer = new MutationObserver(() => {
-        createNavButtons();
-        watchPlayerState();
-        managePillBar();
+        scheduleDOMUpdate();
     });
 
     observer.observe(document.body, {
@@ -455,8 +468,7 @@ function initObserver() {
     // resize listener covers window.innerWidth checks in
     // watchPlayerState() and managePillBar() — those don't fire on DOM mutation
     window.addEventListener("resize", () => {
-        watchPlayerState();
-        managePillBar();
+        scheduleDOMUpdate();
     });
 }
 
