@@ -295,7 +295,9 @@ async function handleMainBtnClick(e, mainBtn) {
             // Fallback: if messaging fails, read sessionStorage as last resort
             try {
                 inMiniMode = sessionStorage.getItem("ytm_in_mini_mode") === "true";
-            } catch {}
+            } catch (err) {
+                console.warn("YTM Mini: Failed to read state from sessionStorage", err);
+            }
         }
 
         const isEntering = !inMiniMode;
