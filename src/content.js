@@ -189,6 +189,9 @@ function initDraggable(el) {
 }
 
 function managePillBar() {
+    if (typeof document === "undefined" || !document || !document.body) {
+        return;
+    }
     if (window.innerWidth > 600) {
         const container = document.getElementById("ytm-pill-container");
         if (container) {
@@ -243,6 +246,9 @@ function managePillBar() {
 }
 
 function watchPlayerState() {
+    if (typeof document === "undefined" || !document || !document.body) {
+        return;
+    }
     if (window.innerWidth > 600) {
         document.body.classList.remove("ytm-mini-safe");
         document.body.classList.remove("ytm-mini-mode");
@@ -412,6 +418,9 @@ function createSupportButton() {
 }
 
 function createNavButtons() {
+    if (typeof document === "undefined" || !document) {
+        return;
+    }
     if (document.getElementById("ytm-mini-btn")) {
         return;
     }
@@ -434,7 +443,12 @@ function createNavButtons() {
 // --- MutationObserver: replaces setInterval polling ---
 // Fires only when DOM actually changes — no continuous CPU drain.
 
+let observer = null;
+
 function initObserver() {
+    if (observer) {
+        observer.disconnect();
+    }
     // Run once immediately in case DOM is already loaded
     createNavButtons();
     watchPlayerState();
@@ -447,7 +461,13 @@ function initObserver() {
             return;
         }
         isScheduled = true;
-        requestAnimationFrame(() => {
+        const raf =
+            typeof requestAnimationFrame !== "undefined"
+                ? requestAnimationFrame
+                : typeof window !== "undefined" && window.requestAnimationFrame
+                  ? window.requestAnimationFrame
+                  : (cb) => setTimeout(cb, 0);
+        raf(() => {
             isScheduled = false;
             createNavButtons();
             watchPlayerState();
@@ -456,7 +476,7 @@ function initObserver() {
     }
 
     // Watch body for any DOM changes (nodes added/removed)
-    const observer = new MutationObserver(() => {
+    observer = new MutationObserver(() => {
         scheduleDOMUpdate();
     });
 
@@ -480,5 +500,12 @@ if (document.body) {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-    module.exports = { watchPlayerState, managePillBar, createNavButtons, injectMiniCSS };
+    module.exports = {
+        watchPlayerState,
+        managePillBar,
+        createNavButtons,
+        injectMiniCSS,
+        initDraggable,
+        initObserver,
+    };
 }
