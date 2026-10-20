@@ -275,9 +275,6 @@ async function handleMainBtnClick(e, mainBtn) {
         mainBtn.style.transform = "scale(1)";
         mainBtn.style.backgroundColor = "transparent";
     }, 150);
-
-    console.log("YTM Mini: Toggle button clicked");
-
     // Use fallback-safe messenger
     const messenger = typeof browser !== "undefined" ? browser : chrome;
 
