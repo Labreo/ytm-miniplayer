@@ -150,11 +150,11 @@ describe("Background Script - Message Handler: get_window_type", () => {
     });
 
     test("returns 'normal' fallback when windows.get throws error", async () => {
-        let warnLogged = false;
+        const warningsLogged = [];
         const customConsole = {
             log: () => {},
-            warn: () => {
-                warnLogged = true;
+            warn: (...args) => {
+                warningsLogged.push(args);
             },
             error: () => {},
         };
@@ -163,14 +163,17 @@ describe("Background Script - Message Handler: get_window_type", () => {
             console: customConsole,
         });
 
+        const errorToThrow = new Error("Window not found");
         mockWindows.get = async () => {
-            throw new Error("Window not found");
+            throw errorToThrow;
         };
 
         const listener = getMessageListener();
         const res = await listener({ action: "get_window_type" }, { tab: { windowId: 123 } });
         assert.deepEqual(JSON.parse(JSON.stringify(res)), { windowType: "normal" });
-        assert.strictEqual(warnLogged, true);
+        assert.strictEqual(warningsLogged.length, 1);
+        assert.strictEqual(warningsLogged[0][0], "Background: get_window_type failed");
+        assert.strictEqual(warningsLogged[0][1], errorToThrow);
     });
 });
 
