@@ -37,4 +37,26 @@ export default [
       "arrow-body-style": ["warn", "as-needed"],
     },
   },
+  {
+    files: ["tests/**/*.js"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      "no-console": "off",
+      "no-debugger": "error",
+      "no-undef": "error",
+      "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+      "eqeqeq": ["error", "always"],
+      "no-var": "error",
+      "prefer-const": "error",
+      "curly": ["error", "all"],
+      "prefer-arrow-callback": "warn",
+      "arrow-body-style": ["warn", "as-needed"],
+    },
+  },
 ];
